@@ -7672,11 +7672,13 @@ document.addEventListener('visibilitychange', () => {
 });
 
 /* ---------- 발음 ---------- */
-const audio = { voices: { zh: null, en: null }, tts: null };
-const hasAudio = lang => !!(audio.voices[lang] || audio.tts);
+const audio = { voices: { zh: null, en: null }, tts: null, any: false };
+/* 아이폰은 음성 목록을 늦게 주거나 비워서 줄 때가 있다. 목록이 비어 있으면 언어만 지정해서 읽게 한다 */
+const hasAudio = lang => !!(audio.voices[lang] || audio.tts || audio.any);
 function pickVoice() {
   try {
     const vs = speechSynthesis.getVoices() || [];
+    audio.any = vs.length === 0;
     const zh = vs.filter(v => /^zh/i.test(v.lang)), en = vs.filter(v => /^en/i.test(v.lang));
     audio.voices.zh = zh.find(v => /zh[-_]CN/i.test(v.lang)) || zh.find(v => !/HK|TW|yue/i.test(v.lang)) || zh[0] || null;
     audio.voices.en = en.find(v => /en[-_]US/i.test(v.lang)) || en[0] || null;
@@ -7684,13 +7686,21 @@ function pickVoice() {
   } catch (e) {}
 }
 function refreshAudio() { document.body.classList.toggle('no-audio', !hasAudio(TR().voice)); }
-try { if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.addEventListener('voiceschanged', pickVoice); } } catch (e) {}
+try { if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.addEventListener('voiceschanged', pickVoice); [300, 1000, 2500, 6000].forEach(t => setTimeout(pickVoice, t)); document.addEventListener('pointerdown', pickVoice, { once: true }); } } catch (e) {}
 function speak(text, lang, rate) {
   if (!text) return;
   lang = lang === 'en' ? 'en' : 'zh';
   const v = audio.voices[lang];
-  if (v) {
-    try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.voice = v; u.lang = v.lang; u.rate = rate || (lang === 'en' ? .95 : .85); speechSynthesis.speak(u); return; } catch (e) {}
+  if (v || audio.any) {
+    try {
+      const ss = speechSynthesis;
+      if (ss.speaking || ss.pending) ss.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      if (v) u.voice = v;
+      u.lang = v ? v.lang : (lang === 'en' ? 'en-US' : 'zh-CN'); u.rate = rate || (lang === 'en' ? .95 : .85); u.volume = 1;
+      ss.speak(u); if (ss.paused) ss.resume();
+      return;
+    } catch (e) {}
   }
   if (audio.tts) audio.tts.speak(text, { language: lang === 'en' ? 'en' : 'zh-CN', rate: rate || (lang === 'en' ? 1 : .85) }).catch(err => { if (err && err.code === 'not_granted') { audio.tts = null; refreshAudio(); } });
 }
