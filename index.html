@@ -11,6 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <meta name="theme-color" content="#e3f5ec">
+<meta name="referrer" content="no-referrer">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="수찬 단어장">
@@ -1143,6 +1144,25 @@ body.focusing .rate { position: static !important; box-shadow: none !important; 
 .usbtn { border: 0; border-radius: 99px; padding: 7px 12px; background: var(--pink-soft); color: #c2456b; font-size: 13px; font-weight: 800; white-space: nowrap; }
 #sheet .card.us { box-shadow: none; border: 0; padding: 0; background: none; }
 #sheet .card.us > img { max-height: 200px; object-fit: contain; }
+
+/* 보기 아래 뜻 */
+.osub { display: block; margin-top: 3px; font-size: 12px; font-weight: 500; line-height: 1.35; color: var(--muted); font-family: var(--font-body); overflow-wrap: anywhere; }
+.opt.wrong .osub { color: #b8456a; }
+/* 복습 줄, 헷갈린 단어 */
+.rvrow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 13px; }
+.rvrow > b { font-weight: 800; margin-right: 2px; }
+.rvrow button { border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 6px 11px; font-size: 12.5px; font-weight: 700; }
+.rvrow button i { font-style: normal; color: var(--mint-k); font-weight: 800; margin-left: 2px; }
+.recap { gap: 10px; border-color: var(--yellow-line) !important; }
+.recap h2 { margin: 0; font-size: 17px; font-weight: 800; }
+/* 게임 새 유형 */
+.opt.oxopt .v { font-size: 17px; font-weight: 800; }
+.oxm { font-family: var(--font-en); font-size: 26px; margin-right: 4px; }
+.g-mean.ox { font-size: 17px; margin-top: 4px; }
+.g-spk { margin: 0 auto 4px; }
+/* 글씨체 */
+.hd h1 { white-space: nowrap; }
+[data-font="hand"] .mean-big, [data-font="hand"] .meaning { letter-spacing: 0; }
 </style>
 </head>
 <body class="no-audio">
@@ -6669,12 +6689,16 @@ function rate(r) {
   if (!id || !session.flipped) return;
   ensureDaily();
   const t = today(), c = getCard(id), wasNew = !c[SN] && !c[B], gap = gapOf(c, r), nb = nextBox(c, r);
-  c[B] = nb; c[SN]++;
-  c[D] = nowMin() + gap; if (r === 0) c[WR]++; else c[RI]++;
+  const keep = session.extra && r === 2 && c[B] > 0 && c[D] > nowMin();
+  c[SN]++;
+  if (!keep) { c[B] = nb; c[D] = nowMin() + gap; }
+  if (r === 0) c[WR]++; else c[RI]++;
   let gateNow = false;
   if (wasNew) { S.daily.newDone++; if (!S.gate.ids.includes(id)) S.gate.ids.push(id); gateNow = gateLocked() && S.gate.tries === 0 && S.gate.best === 0; }
   S.daily.reviewed++; addStudy();
   markStudied(t);
+  if (!Array.isArray(S.daily.ids)) S.daily.ids = []; if (!S.daily.ids.includes(id)) S.daily.ids.push(id);
+  if (r < 2 && !recap.includes(id)) recap.push(id);
   session.queue.shift();
   if (r === 0) session.queue.splice(Math.min(session.queue.length, 3), 0, id);
   dueIn(deckWords(), nowMin()).map(w => w.id).filter(x => x !== id && !session.queue.includes(x)).forEach(x => { session.queue.splice(Math.min(session.queue.length, 2), 0, x); session.total = (session.total || 0) + 1; });
@@ -6695,7 +6719,8 @@ function studyHomeHTML() {
     <button class="btn primary wide cta" data-action="focusstart">${session.touched || S.daily.reviewed ? '이어서 학습하기' : '학습 시작'}</button>
   </section>`;
 }
-function startFocus() { if (!session.queue.length) return; focus = true; session.flipped = false; tab = 'study'; render(); window.scrollTo({ top: 0 }); if (S.settings.front === 'listen') speak(byId[session.queue[0]].h, byId[session.queue[0]].lang); }
+let recap = [];
+function startFocus() { if (!session.queue.length) return; recap = []; focus = true; session.flipped = false; tab = 'study'; render(); window.scrollTo({ top: 0 }); if (S.settings.front === 'listen') speak(byId[session.queue[0]].h, byId[session.queue[0]].lang); }
 function swipeRate(r) {
   const id = session.queue[0]; if (!id) return;
   const w = byId[id], seen = session.flipped;
@@ -6762,6 +6787,24 @@ function renderDone() {
       </div>
     </section>`;
 }
+function startExtra(ids) {
+  ids = ids.filter(id => byId[id]); if (!ids.length) return;
+  session = { queue: ids.slice(0, 40), flipped: false, touched: false, justFlipped: false, total: Math.min(40, ids.length), extra: true }; wantEx(session.queue.slice(0, 24)); startFocus();
+}
+const todayIds = () => (S.daily.day === today() && Array.isArray(S.daily.ids) ? S.daily.ids : []).filter(id => byId[id] && byId[id].lang === (isEn() ? 'en' : 'zh'));
+const laterCount = () => { const nm = nowMin(); return deckWords().filter(w => { const c = S.cards[w.id]; return c && c[B] > 0 && c[D] > nm; }).length; };
+function reviewRowHTML() {
+  if (!S.settings.track) return '';
+  const a = todayIds().length, b = myWeak().length, c = laterCount();
+  if (!a && !b && !c) return '';
+  return `<div class="rvrow" aria-label="복습"><b>복습</b>${a ? `<button data-action="rvtoday">오늘 배운 단어 <i>${a}</i></button>` : ''}${b ? `<button data-action="rvweak">자주 틀린 단어 <i>${b}</i></button>` : ''}${c ? `<button data-action="early">미리 복습 <i>${Math.min(30, c)}</i></button>` : ''}</div>`;
+}
+function recapHTML() {
+  const ws = recap.map(id => byId[id]).filter(Boolean); if (!ws.length || focus) return '';
+  return `<section class="card recap" aria-label="방금 헷갈린 단어"><h2>방금 헷갈린 단어 ${ws.length}개</h2>
+    <ul class="missed">${ws.slice(0, 12).map(w => `<li><span class="h" ${w.lang === 'en' ? 'lang="en" style="font-family:var(--font-en)"' : 'lang="zh-CN"'}>${esc(w.h)}</span>${w.lang === 'en' ? '' : `<span class="p">${pyPlain(w)}</span>`}<span class="m">${w.m}</span></li>`).join('')}</ul>
+    <div class="actions"><button class="btn primary" data-action="recapgo">한 번 더 보기</button><button class="btn" data-action="recapx">닫기</button></div></section>`;
+}
 function startEarly() {
   const nm = nowMin(), ids = deckWords().filter(w => { const c = S.cards[w.id]; return c && c[B] > 0 && c[D] > nm; }).sort((a, b) => S.cards[a.id][D] - S.cards[b.id][D]).slice(0, 30).map(w => w.id);
   if (!ids.length) return;
@@ -6807,7 +6850,15 @@ function nextGameQ() {
   const id = (choices.length ? choices : g.pool)[Math.floor(Math.random() * (choices.length || g.pool.length))];
   g.recent = g.recent.concat(id).slice(-Math.min(8, Math.floor(g.pool.length / 2)));
   const w = byId[id], pool = deckWords().length >= 8 ? deckWords() : WORDS.filter(x => x.lang === w.lang);
-  g.q = Object.assign(makeQ(w, Math.random() < .55 ? 'meaning' : 'hanzi', pool), { gold: g.n >= 3 && Math.random() < .14 });
+  const kinds = ['meaning', 'meaning', 'meaning', 'hanzi', 'hanzi', 'hanzi', 'ox', 'ox'];
+  if (hasAudio(TR().voice)) kinds.push('listen', 'listen');
+  if (w.lang === 'zh' && !/[一不]/.test(w.h)) kinds.push('tone');
+  let kind = kinds[Math.floor(Math.random() * kinds.length)]; if (g.lastKind === kind && Math.random() < .6) kind = kinds[Math.floor(Math.random() * kinds.length)]; g.lastKind = kind;
+  let q;
+  if (kind === 'ox') { const truth = Math.random() < .5, others = pool.filter(x => x.id !== w.id && x.m !== w.m), other = others[Math.floor(Math.random() * others.length)]; q = { type: 'ox', id: w.id, shown: truth || !other ? w.id : other.id, opts: [1, 0], ans: truth || !other ? 0 : 1 }; }
+  else q = makeQ(w, kind, pool);
+  g.q = Object.assign(q, { gold: g.n >= 3 && Math.random() < .14 });
+  if (kind === 'listen') setTimeout(() => { if (game === g && g.q === q && g.picked == null) speak(w.h, w.lang); }, 60);
   g.n++; g.phase = 'play'; g.picked = null; g.mood = 'idle';
   g.tLimit = Math.max(3200, 8000 - (g.level - 1) * 550); g.tStart = performance.now();
   render(); runGameTimer();
@@ -6853,7 +6904,7 @@ function gamePick(i) {
   render();
   if (!ok) { const el = document.querySelector('.game'); if (el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); } }
   gamePop(msg, cls);
-  setTimeout(() => { if (!game || game !== g) return; if (g.hearts <= 0 || g.passed) endGame(); else nextGameQ(); }, g.passed ? 1100 : ok ? 650 : 1250);
+  setTimeout(() => { if (!game || game !== g) return; if (g.hearts <= 0 || g.passed) endGame(); else nextGameQ(); }, g.passed ? 1100 : ok ? 650 : 1900);
 }
 function endGame() {
   const g = game; if (!g || g.phase === 'over') return;
@@ -6941,7 +6992,7 @@ function renderExam() {
     if (en) html = esc(v.s || '').replace(new RegExp(`(^|[^A-Za-zÀ-ÿ])(${escRe(esc(w.stem))}[A-Za-zÀ-ÿ'’-]*)`, 'i'), (m0, pre, word) => pre + (answered ? `<mark>${word}</mark>` : '<span class="gap">&nbsp;</span>'));
     else { const parts = esc(v.zh || '').split(esc(w.h)); html = parts[0] + `<span class="gap">${answered ? esc(w.h) : '&nbsp;'}</span>` + parts.slice(1).join(esc(w.h)); }
     prompt = `<p class="cloze${en ? ' en' : ''}" lang="${lg}">${html}</p>${answered ? `<p class="hint">${esc(v.ko || '')}</p>` : '<p class="hint">빈칸에 알맞은 단어를 고르세요</p>'}`;
-    body = `<div class="opts" role="group" aria-label="보기">${q.opts.map((id, i) => optBtn(esc(byId[id].h), i, en ? 'enopt' : 'han')).join('')}</div>`;
+    body = `<div class="opts" role="group" aria-label="보기">${q.opts.map((id, i) => optBtn(esc(byId[id].h) + (answered ? optSub('cz', id) : ''), i, en ? 'enopt' : 'han')).join('')}</div>`;
     after = `<p class="exp"><b lang="${lg}">${esc(w.h)}</b> · ${w.m}</p>`;
   } else {
     const o = q.o, full = e.sel.length === o.ch.length;
@@ -7015,7 +7066,7 @@ function gameCardHTML() {
   return `<section class="card gcard" aria-label="단어 게임">
     <div class="gcard-top"><div class="gcard-pet">${gameDinoHTML('eat')}</div>
       <div><h2>수찬이 먹이 주기</h2><p class="lead">맞힐 때마다 수찬이가 잎사귀를 먹어요. 하트 3개가 다 없어지면 끝이에요.</p></div></div>
-    <ul class="g-rules"><li><b>콤보</b> 5개마다 점수가 커지고 속도도 빨라져요</li><li><b>피버 타임</b> 8콤보부터 10초 동안 점수 두 배</li><li><b>황금 문제</b> 가끔 나오는 황금 문제는 점수 세 배</li></ul>
+    <ul class="g-rules"><li><b>콤보</b> 5개마다 점수가 커지고 속도도 빨라져요</li><li><b>피버 타임</b> 8콤보부터 10초 동안 점수 두 배</li><li><b>황금 문제</b> 가끔 나오는 황금 문제는 점수 세 배</li><li><b>문제 유형</b> 뜻·단어 고르기에 OX, 듣기${isEn() ? '' : ', 성조'} 문제가 섞여 나와요</li></ul>
     <h3 class="gb-h">최고 기록</h3>${gameBoardHTML()}
     <button class="btn primary wide" data-action="gamestart">게임 시작</button>
   </section>`;
@@ -7029,12 +7080,20 @@ function renderGame() {
   if (g.phase === 'count') qHTML = `<p class="g-ready">준비!</p>`;
   else {
     const w = byId[q.id], en = w.lang === 'en', answered = g.picked != null;
-    if (q.type === 'meaning') qHTML = `<p class="g-word${en ? ' en' : ''}" lang="${en ? 'en' : 'zh-CN'}">${answered && !en ? hzColored(w) : esc(w.h)}</p>${answered && !en ? `<p class="g-py">${pyText(w, null, true)}</p>` : ''}<p class="g-ask">뜻은?</p>`;
+    const wordP = `<p class="g-word${en ? ' en' : ''}" lang="${en ? 'en' : 'zh-CN'}">${answered && !en ? hzColored(w) : esc(w.h)}</p>${answered && !en ? `<p class="g-py">${pyText(w, null, true)}</p>` : ''}`;
+    if (q.type === 'meaning') qHTML = wordP + '<p class="g-ask">뜻은?</p>';
+    else if (q.type === 'tone') qHTML = `<p class="g-word" lang="zh-CN">${esc(w.h)}</p><p class="g-ask">성조까지 맞는 병음은?</p>`;
+    else if (q.type === 'listen') qHTML = `<button class="spk big g-spk" data-action="say" data-lang="${w.lang}" data-say="${esc(w.h)}" aria-label="다시 듣기">${SPK}</button>${answered ? wordP : ''}<p class="g-ask">${answered ? esc(w.m) : '들은 단어는?'}</p>`;
+    else if (q.type === 'ox') qHTML = wordP + `<p class="g-mean ox">${esc(byId[q.shown].m)}</p><p class="g-ask">${answered && q.shown !== w.id ? '진짜 뜻: ' + esc(w.m) : '이 뜻이 맞을까요?'}</p>`;
     else qHTML = `<p class="g-mean">${esc(w.m)}</p><p class="g-ask">${en ? '영어 단어는?' : '중국어 단어는?'}</p>`;
     opts = q.opts.map((o, i) => {
       let st = ''; if (answered) st = i === q.ans ? ' right' : (i === g.picked ? ' wrong' : ' dim');
-      const ow = byId[o], v = q.type === 'meaning' ? esc(ow.m) : (en ? `<span lang="en">${esc(ow.h)}</span>` : `<span lang="zh-CN">${esc(ow.h)}</span>`);
-      return `<button class="opt ${q.type === 'meaning' ? '' : (en ? 'enopt' : 'han')}${st}" data-action="gpk" data-i="${i}" ${answered ? 'disabled' : ''}><span class="v">${v}</span>${answered && i === q.ans ? `<span class="okmark">${svgI('check')}</span>` : ''}</button>`;
+      let v, cls = en ? 'enopt' : 'han';
+      if (q.type === 'ox') { v = o ? '<b class="oxm">O</b> 맞아요' : '<b class="oxm">X</b> 아니에요'; cls = 'oxopt'; }
+      else if (q.type === 'tone') { v = pyText(w, o, false); cls = 'pyo'; }
+      else if (q.type === 'meaning') { v = esc(byId[o].m); cls = ''; }
+      else v = `<span lang="${en ? 'en' : 'zh-CN'}">${esc(byId[o].h)}</span>`;
+      return `<button class="opt ${cls}${st}" data-action="gpk" data-i="${i}" ${answered ? 'disabled' : ''}><span class="v">${v}</span>${answered ? optSub(q.type, o) : ''}${answered && i === q.ans ? `<span class="okmark">${svgI('check')}</span>` : ''}</button>`;
     }).join('');
   }
   main.innerHTML = `<section class="game${fever ? ' fever' : ''}" aria-label="단어 게임">
@@ -7159,6 +7218,14 @@ function typeAnswer(val) {
   else { quiz.missed.push(q.id); c[B] = 1; c[D] = nowMin(); c[WR]++; petSay(pick1(L().again), 'sad', 1600); }
   save(); render();
 }
+const pyPlain = x => esc(String(x.p || '').replace(/\./g, ''));
+function optSub(type, o) {
+  if (type === 'tone' || type === 'ox' || Array.isArray(o)) return '';
+  const x = byId[o]; if (!x) return '';
+  if (type === 'smean') return `<small class="osub" lang="${x.lang === 'en' ? 'en' : 'zh-CN'}">${esc(sentOf(o))}</small>`;
+  if (type === 'meaning' || type === 'lmean') return `<small class="osub" lang="${x.lang === 'en' ? 'en' : 'zh-CN'}">${esc(x.h)}${x.lang === 'en' ? '' : ' · ' + pyPlain(x)}</small>`;
+  return `<small class="osub">${x.lang === 'en' ? '' : pyPlain(x) + ' · '}${x.m}</small>`;
+}
 function typeFormHTML(q, w, answered) {
   const ok = quiz.picked === q.ans;
   return `<form class="typef${answered ? (ok ? ' right' : ' wrong') : ''}" data-form="type"><input id="typein" type="text" lang="en" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="${w.lang === 'en' ? '영어 단어' : '병음 (성조 없이)'}" value="${esc(quiz.typed || '')}" ${answered ? 'disabled' : ''}>${answered ? '' : '<button class="btn primary" type="submit">확인</button>'}</form>${answered ? '' : '<button class="link typeskip" data-action="typeskip">모르겠어요</button>'}`;
@@ -7255,7 +7322,7 @@ function renderQuiz() {
   } else { prompt = tzg(w, { color: false }) + '<p class="hint">성조까지 맞는 병음은?</p>'; optCls = 'pyo'; optHTML = tones => pyText(w, tones, false); }
   const opts = q.opts.map((o, i) => {
     let st = ''; if (answered) st = i === q.ans ? ' right' : (i === quiz.picked ? ' wrong' : ' dim');
-    return `<button class="opt ${optCls}${st}" data-action="pick" data-i="${i}" ${answered ? 'disabled' : ''} aria-label="${'ABCD'[i]}번"><span class="k">${'ABCD'[i]}</span><span class="v">${optHTML(o)}</span>${answered && i === q.ans ? `<span class="okmark">${svgI('check')}</span>${i === quiz.picked ? '<span class="confetti" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>' : ''}` : ''}</button>`;
+    return `<button class="opt ${optCls}${st}" data-action="pick" data-i="${i}" ${answered ? 'disabled' : ''} aria-label="${'ABCD'[i]}번"><span class="k">${'ABCD'[i]}</span><span class="v">${optHTML(o)}</span>${answered ? optSub(q.type, o) : ''}${answered && i === q.ans ? `<span class="okmark">${svgI('check')}</span>${i === quiz.picked ? '<span class="confetti" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>' : ''}` : ''}</button>`;
   }).join('');
   const ok = quiz.picked === q.ans, last = quiz.i === quiz.qs.length - 1;
   main.innerHTML = `
@@ -7451,6 +7518,11 @@ function settingsHTML() {
         <button data-action="track" data-v="zh" aria-pressed="${S.settings.track === 'zh'}">중국어</button><button data-action="track" data-v="en" aria-pressed="${S.settings.track === 'en'}">영어</button></div></div>
       <div class="set"><span id="lb-front">카드 앞면</span><div class="seg" role="group" aria-labelledby="lb-front">
         <button data-action="front" data-v="hanzi" aria-pressed="${S.settings.front === 'hanzi'}">단어</button><button data-action="front" data-v="meaning" aria-pressed="${S.settings.front === 'meaning'}">뜻</button><button data-action="front" data-v="listen" aria-pressed="${S.settings.front === 'listen'}">소리</button></div></div>
+      ${ONLINE_OK() ? `<div class="set"><span id="lb-snd">발음 소리</span><div class="seg" role="group" aria-labelledby="lb-snd">
+        ${[['auto', '자동'], ['online', '온라인'], ['device', '기기']].map(([v, t]) => `<button data-action="sound" data-v="${v}" aria-pressed="${(S.settings.sound || 'auto') === v}">${t}</button>`).join('')}</div></div>
+      <p class="note-s">소리가 안 나면 "온라인"으로 바꿔 보세요. <button class="link" data-action="say" data-lang="${isEn() ? 'en' : 'zh'}" data-say="${isEn() ? 'Hello, nice to meet you.' : '你好，很高兴认识你。'}">소리 시험해 보기</button></p>` : ''}
+      <div class="set"><span id="lb-font">글씨체</span><div class="seg" role="group" aria-labelledby="lb-font">
+        ${Object.keys(FONTS).map(k => `<button data-action="font" data-v="${k}" aria-pressed="${(S.settings.font || 'base') === k}">${FONTS[k].name}</button>`).join('')}</div></div>
       <div class="set"><span id="lb-npd">하루 새 단어</span><div class="seg" role="group" aria-labelledby="lb-npd">
         ${[10, 20, 30, 50].map(n => `<button data-action="npd" data-n="${n}" aria-pressed="${S.settings.newPerDay === n}">${n}</button>`).join('')}</div></div>
       <div class="set"><span id="lb-gate">관문 통과 점수</span><div class="seg" role="group" aria-labelledby="lb-gate">
@@ -7479,18 +7551,20 @@ function setSync(s) { syncState = s; const el = document.querySelector('#sheet .
 /* ---------- 화면 ---------- */
 const main = document.getElementById('main');
 function render() {
+  applyFont();
   document.body.classList.toggle('notone', !S.settings.tone || isEn());
   document.body.classList.toggle('no-audio', !hasAudio(TR().voice));
   document.querySelectorAll('.tabbar button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
   document.body.classList.toggle('picking', !S.settings.track);
   if (focus && (tab !== 'study' || !session.queue.length || !S.settings.track)) focus = false;
   document.body.classList.toggle('focusing', focus);
+  if (!focus) { const ft = document.getElementById('ftoast'); if (ft) ft.classList.remove('on'); }
   document.body.classList.toggle('gaming', !!(game && tab === 'quiz' && game.phase !== 'over'));
   renderHeader();
   if (!S.settings.track) { renderPick(); renderSide(); return; }
   if (tab === 'study') renderStudy(); else if (tab === 'quiz') renderQuiz(); else if (tab === 'gram') renderGram(); else renderList();
   if (focus) { paintPet(performance.now()); renderSide(); return; }
-  if (!(game && tab === 'quiz')) main.insertAdjacentHTML('afterbegin', bannerHTML() + (tab === 'study' ? coupleCardHTML() + missionHTML() + deckbarHTML() + gateHTML() : ''));
+  if (!(game && tab === 'quiz')) main.insertAdjacentHTML('afterbegin', bannerHTML() + (tab === 'study' ? coupleCardHTML() + missionHTML() + deckbarHTML() + reviewRowHTML() + gateHTML() + recapHTML() : ''));
   paintPet(performance.now());
   renderSide();
 }
@@ -7511,12 +7585,18 @@ document.addEventListener('click', e => {
   else if (a === 'swr') swipeRate(+el.dataset.r);
   else if (a === 'focusstart') startFocus();
   else if (a === 'early') startEarly();
+  else if (a === 'rvtoday') startExtra(todayIds());
+  else if (a === 'rvweak') startExtra(myWeak());
+  else if (a === 'recapgo') { const ids = recap.slice(); startExtra(ids); }
+  else if (a === 'recapx') { recap = []; render(); }
   else if (a === 'focusexit') { focus = false; session.flipped = false; render(); window.scrollTo({ top: 0 }); }
   else if (a === 'say') speak(el.dataset.say, el.dataset.lang, el.dataset.slow ? .6 : 0);
   else if (a === 'genex') { const id = el.dataset.id; ex.failed[id] = 0; if (ex.state === 'error' || ex.state === 'need') ex.state = 'idle'; wantEx([id]); pumpEx(); updateExSlots(); }
   else if (a === 'prefetch') { const ids = [...session.queue, ...newPool().map(w => w.id)].filter(id => !ex.cache[id]).slice(0, 40); ids.forEach(id => { ex.failed[id] = 0; }); if (ex.state === 'error' || ex.state === 'need') ex.state = 'idle'; wantEx(ids); pumpEx(); updateExSlots(); }
   else if (a === 'more') { if (gateLocked()) return; S.daily.bonus = (S.daily.bonus || 0) + 10; save(); buildQueue(); startFocus(); }
   else if (a === 'deck') { S.settings.deck = el.dataset.deck; save(); buildQueue(); quiz = null; listLimit = 150; render(); }
+  else if (a === 'sound') { S.settings.sound = el.dataset.v; audio.ssBad = false; save(); renderSheetBody(); }
+  else if (a === 'font') { S.settings.font = el.dataset.v; save(); applyFont(); renderSheetBody(); }
   else if (a === 'front') { S.settings.front = el.dataset.v; session.flipped = false; save(); render(); }
   else if (a === 'npd') { S.settings.newPerDay = +el.dataset.n; save(); if (!session.flipped) buildQueue(); render(); }
   else if (a === 'order') { S.settings.order = el.dataset.v; save(); if (!session.flipped) buildQueue(); render(); }
@@ -7672,9 +7752,42 @@ document.addEventListener('visibilitychange', () => {
 });
 
 /* ---------- 발음 ---------- */
+const FONTS = {
+  base: { name: '기본' },
+  serif: { name: '명조', css: 'family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Serif+SC:wght@400;600;700', body: '"Noto Serif KR", "AppleMyungjo", serif', han: '"Noto Serif SC", "Songti SC", serif' },
+  round: { name: '둥근', css: 'family=Jua&family=Gowun+Dodum&family=ZCOOL+KuaiLe', body: '"Gowun Dodum", "Apple SD Gothic Neo", sans-serif', display: '"Jua", "Apple SD Gothic Neo", sans-serif', han: '"ZCOOL KuaiLe", "PingFang SC", sans-serif' },
+  hand: { name: '손글씨', css: 'family=Gaegu:wght@400;700&family=Ma+Shan+Zheng', body: '"Gaegu", "Apple SD Gothic Neo", sans-serif', han: '"Ma Shan Zheng", "Kaiti SC", "STKaiti", serif' },
+};
+let fontOn = null;
+function applyFont() {
+  const k = FONTS[S.settings.font] ? S.settings.font : 'base'; if (k === fontOn) return; fontOn = k;
+  const f = FONTS[k], st = document.documentElement.style;
+  let link = document.getElementById('fontx');
+  if (f.css) { if (!link) { link = document.createElement('link'); link.id = 'fontx'; link.rel = 'stylesheet'; document.head.appendChild(link); } link.href = `https://fonts.googleapis.com/css2?${f.css}&display=swap`; }
+  ['body', 'display', 'han'].forEach(v => { const val = v === 'display' ? (f.display || f.body) : f[v]; if (val) st.setProperty('--font-' + v, val); else st.removeProperty('--font-' + v); });
+  document.documentElement.dataset.font = k;
+}
 const audio = { voices: { zh: null, en: null }, tts: null, any: false };
 /* 아이폰은 음성 목록을 늦게 주거나 비워서 줄 때가 있다. 목록이 비어 있으면 언어만 지정해서 읽게 한다 */
-const hasAudio = lang => !!(audio.voices[lang] || audio.tts || audio.any);
+const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const ONLINE_OK = () => !!window.__standalone;   // Claude 밖 독립 앱에서만 온라인 발음을 쓴다
+const hasAudio = lang => !!(audio.voices[lang] || audio.tts || audio.any || ONLINE_OK());
+const onlineURL = (text, lang, alt) => alt
+  ? `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=${lang === 'en' ? 'en-US' : 'zh-CN'}&q=${encodeURIComponent(text)}`
+  : `https://dict.youdao.com/dictvoice?le=${lang === 'en' ? 'en' : 'zh'}&audio=${encodeURIComponent(text)}`;
+/* 자동: 아이폰이거나 기기 음성이 소리를 못 내면 온라인 발음, 그 밖에는 기기 음성 */
+function soundMode() { const m = S.settings.sound; if (!ONLINE_OK()) return 'device'; return m === 'online' || m === 'device' ? m : (IS_IOS || audio.ssBad || !(audio.voices.zh || audio.voices.en || audio.any) ? 'online' : 'device'); }
+function playOnline(text, lang, rate, onfail) {
+  try {
+    const a = audio.el || (audio.el = new Audio()); let alt = false;
+    try { a.pause(); } catch (e) {}
+    const sp = rate && rate < .8 ? .7 : 1;
+    a.onerror = () => { if (!alt) { alt = true; a.src = onlineURL(text, lang, true); a.defaultPlaybackRate = sp; a.playbackRate = sp; const p2 = a.play(); if (p2 && p2.catch) p2.catch(() => {}); } else { audio.lastErr = 'online'; if (onfail) onfail(); } };
+    a.onplaying = () => { audio.lastErr = ''; };
+    a.src = onlineURL(text, lang, false); a.defaultPlaybackRate = sp; a.playbackRate = sp;
+    const p = a.play(); if (p && p.catch) p.catch(() => {});
+  } catch (e) { if (onfail) onfail(); }
+}
 function pickVoice() {
   try {
     const vs = speechSynthesis.getVoices() || [];
@@ -7690,6 +7803,10 @@ try { if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.addEventLi
 function speak(text, lang, rate) {
   if (!text) return;
   lang = lang === 'en' ? 'en' : 'zh';
+  if (soundMode() === 'online') { playOnline(text, lang, rate, () => speakDevice(text, lang, rate)); return; }
+  speakDevice(text, lang, rate);
+}
+function speakDevice(text, lang, rate) {
   const v = audio.voices[lang];
   if (v || audio.any) {
     try {
@@ -7698,7 +7815,9 @@ function speak(text, lang, rate) {
       const u = new SpeechSynthesisUtterance(text);
       if (v) u.voice = v;
       u.lang = v ? v.lang : (lang === 'en' ? 'en-US' : 'zh-CN'); u.rate = rate || (lang === 'en' ? .95 : .85); u.volume = 1;
+      let started = false; u.onstart = () => { started = true; };
       ss.speak(u); if (ss.paused) ss.resume();
+      if (ONLINE_OK() && S.settings.sound !== 'device') setTimeout(() => { if (!started && !ss.speaking) audio.ssBad = true; }, 1800);
       return;
     } catch (e) {}
   }
