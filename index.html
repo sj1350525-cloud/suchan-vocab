@@ -1139,6 +1139,10 @@ body.focusing .rate button { min-height: 58px; }
 #ftoast span { overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 @media (prefers-reduced-motion: reduce) { .fcard, .fcard.fly { transition: none; } }
 body.focusing .rate { position: static !important; box-shadow: none !important; margin: 0 !important; padding: 0 !important; background: none !important; }
+/* 우리 기록 버튼 (제목 옆) */
+.usbtn { border: 0; border-radius: 99px; padding: 7px 12px; background: var(--pink-soft); color: #c2456b; font-size: 13px; font-weight: 800; white-space: nowrap; }
+#sheet .card.us { box-shadow: none; border: 0; padding: 0; background: none; }
+#sheet .card.us > img { max-height: 200px; object-fit: contain; }
 </style>
 </head>
 <body class="no-audio">
@@ -6355,7 +6359,7 @@ function headerHTML() {
   const hasNew = ITEMS.some(it => itemUnlocked(it) && !S.settings.seenItems.includes(it.id));
   const line = performance.now() < pet.until ? pet.line : idleLine();
   return `<div class="hd-l">
-      <div class="hd-title"><h1>${title}</h1>${S.settings.track ? `<button class="iconbtn" data-action="settings" aria-label="설정">${svgI('gear')}</button>` : ''}</div>
+      <div class="hd-title"><h1>${title}</h1>${S.settings.track ? `<button class="iconbtn" data-action="settings" aria-label="설정">${svgI('gear')}</button>${tab === 'study' && annivInfo() ? `<button class="usbtn" data-action="usopen" aria-label="우리 기록 보기">♥ ${annivInfo().n.toLocaleString()}일</button>` : ''}` : ''}</div>
       <div class="hd-lv"><span class="lvbadge" aria-label="레벨 ${si + 1}">${si + 1}</span><span class="lvname">${p ? '우리 ' : ''}${st.name}</span><span class="xpnum">${next ? `${xp.toLocaleString()} / ${next.xp.toLocaleString()} XP` : `${xp.toLocaleString()} XP`}</span></div>
       <div class="xpbar" role="progressbar" aria-label="다음 단계까지" aria-valuenow="${Math.round(pct * 100)}" aria-valuemin="0" aria-valuemax="100"><i style="width:${(pct * 100).toFixed(1)}%"></i></div>
       <p class="bubble" id="bubble" aria-live="polite">${esc(line)}</p>
@@ -6454,9 +6458,10 @@ function deckbarHTML() {
 }
 /* 아래에서 올라오는 시트: 설정, 꾸미기, 응원, 퀴즈 내기, 초대 안내 */
 let sheet = null;
-const SHEET_TITLE = { report: '주간 리포트', gift: '단어 선물', settings: '설정', closet: '수찬이 꾸미기', cheer: '응원 한마디', quizsend: '퀴즈 내기', invite: '함께 키울 사람 초대하기' };
+const SHEET_TITLE = { us: '우리 기록', report: '주간 리포트', gift: '단어 선물', settings: '설정', closet: '수찬이 꾸미기', cheer: '응원 한마디', quizsend: '퀴즈 내기', invite: '함께 키울 사람 초대하기' };
 function sheetBody() {
   const p = partner();
+  if (sheet === 'us') return usCardHTML();
   if (sheet === 'report') return reportHTML();
   if (sheet === 'settings') return settingsHTML();
   if (sheet === 'gift') return giftSheetHTML();
@@ -6678,7 +6683,6 @@ function studyHomeHTML() {
   return `<section class="card shome" aria-label="오늘의 단어 학습">
     <div class="shome-top"><div><h2>오늘의 단어 학습</h2><p class="lead">복습 ${q.length - nNew}장 · 새 단어 ${nNew}장</p></div><span class="shome-n"><b>${q.length}</b>장</span></div>
     <div class="swguide" aria-hidden="true"><span class="l">← 몰라요</span><span class="u">↑ 애매해요</span><span class="r">알아요 →</span></div>
-    <p class="note-s">단어만 보이는 화면에서 카드를 밀어 분류해요. 카드를 누르면 뜻이 보여요.</p>
     <button class="btn primary wide cta" data-action="focusstart">${session.touched || S.daily.reviewed ? '이어서 학습하기' : '학습 시작'}</button>
   </section>`;
 }
@@ -7467,7 +7471,6 @@ function render() {
   if (tab === 'study') renderStudy(); else if (tab === 'quiz') renderQuiz(); else if (tab === 'gram') renderGram(); else renderList();
   if (focus) { paintPet(performance.now()); renderSide(); return; }
   if (!(game && tab === 'quiz')) main.insertAdjacentHTML('afterbegin', bannerHTML() + (tab === 'study' ? coupleCardHTML() + missionHTML() + deckbarHTML() + gateHTML() : ''));
-  if (tab === 'study') main.insertAdjacentHTML('beforeend', usCardHTML());
   paintPet(performance.now());
   renderSide();
 }
@@ -7500,6 +7503,7 @@ document.addEventListener('click', e => {
   else if (a === 'qstart') startQuiz();
   else if (a === 'qweak') { if (sheet) closeSheet(); startQuiz(true); tab = 'quiz'; render(); window.scrollTo({ top: 0 }); }
   else if (a === 'report') openSheet('report');
+  else if (a === 'usopen') openSheet('us');
   else if (a === 'lstart') startListen();
   else if (a === 'examstart') startExam();
   else if (a === 'examexit') { exam = null; render(); }
@@ -7727,7 +7731,7 @@ async function initRemote() {
       couple.lookReady = true;
       try { localStorage.setItem('zh-hsk56-look', JSON.stringify(couple.look)); } catch (e) {}
       updateScreenBg(); renderCloset(); paintPet(performance.now()); maybeBest(); renderPetInfo(); maybeAlbum();
-      const sig = JSON.stringify([couple.look.anniv, couple.look.album]); if (sig !== couple.lookSig) { const first = couple.lookSig == null; couple.lookSig = sig; if (!first && tab === 'study' && !sheet) render(); }
+      const sig = JSON.stringify([couple.look.anniv, couple.look.album]); if (sig !== couple.lookSig) { const first = couple.lookSig == null; couple.lookSig = sig; if (!first) { if (sheet === 'us') renderSheetBody(); else if (tab === 'study' && !sheet) render(); } }
     }, () => {});
     db.doc('inbox/' + segId(couple.me)).onSnapshot(s => { const d = s.exists ? s.data() : null; couple.inbox = d && Array.isArray(d.items) ? d.items : []; onInbox(); }, () => {});
     writeMember(true);
