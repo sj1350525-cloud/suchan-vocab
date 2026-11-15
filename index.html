@@ -1013,6 +1013,46 @@ body.gaming .banner { display: none; }
 .g-goal.ok i b { background: var(--mint); }
 .go-gate { margin: 0; font-size: 14px; color: var(--muted); text-align: center; line-height: 1.5; }
 .go-gate.ok { color: var(--mint-k); font-weight: 800; }
+
+/* 오늘의 미션 */
+.mis { display: grid; gap: 8px; padding: 12px 14px; border-radius: 18px; background: var(--surface); border: 1.5px solid var(--line); }
+.mis-h { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); }
+.mis-h b { font-size: 14px; color: var(--ink); font-weight: 800; }
+.mis-l { display: flex; gap: 6px; flex-wrap: wrap; }
+.mi { display: inline-flex; align-items: center; gap: 4px; padding: 5px 11px; border-radius: 99px; background: var(--soft); font-size: 12.5px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+.mi.on { background: var(--mint-soft); color: var(--mint-k); }
+.mi svg { width: 13px; height: 13px; }
+/* 직접 쓰기 */
+.typef { display: flex; gap: 8px; min-width: 0; width: 100%; }
+.typef input { flex: 1; width: 0; min-width: 0; padding: 14px 16px; border: 2px solid var(--line); border-radius: 16px; font: inherit; font-family: var(--font-en); font-size: 20px; font-weight: 600; background: var(--surface); color: var(--ink); }
+.typef input:focus { outline: none; border-color: var(--mint-deep); }
+.typef.right input { border-color: var(--mint-deep); background: var(--mint-soft); opacity: 1; -webkit-text-fill-color: var(--ink); }
+.typef.wrong input { border-color: var(--bad); text-decoration: line-through; opacity: 1; -webkit-text-fill-color: var(--muted); }
+.typef .btn { flex: none; }
+.typeskip { justify-self: center; }
+/* 짝 맞추기 */
+.mcard { display: flex !important; align-items: center; gap: 12px; }
+.mcard > div { flex: 1; min-width: 0; }
+.mcard h2 { margin: 0; font-size: 18px; font-weight: 800; }
+.mcard .lead { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
+.mcard .btn { flex: none; }
+.mgame { gap: 10px; }
+.m-top { display: flex; align-items: center; gap: 10px; }
+.m-top b { font-size: 17px; font-weight: 800; }
+.m-n { color: var(--muted); font-weight: 700; font-size: 13px; }
+.m-time { margin-left: auto; font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.m-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.m-tile { min-height: 84px; padding: 8px 6px; border-radius: 16px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); display: grid; place-items: center; text-align: center; font-size: 13px; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; transition: transform .12s, opacity .25s; }
+.m-tile.w { background: var(--pink-soft); border-color: var(--pink-line); }
+.m-tile.m { background: var(--lav-soft); border-color: var(--lav-line); }
+.m-tile .hz { font-size: 24px; font-weight: 600; }
+.m-tile .en { font-family: var(--font-en); font-size: 16px; font-weight: 700; }
+.m-tile span { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.m-tile.sel { border-color: var(--mint-deep); box-shadow: 0 0 0 3px rgba(63, 174, 134, .25); transform: scale(1.03); }
+.m-tile.bad { border-color: var(--bad); animation: mshake .4s; }
+.m-tile.done { opacity: .22; background: var(--mint-soft); border-color: var(--mint-line); }
+@keyframes mshake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+@media (prefers-reduced-motion: reduce) { .m-tile.bad { animation: none; } }
 </style>
 </head>
 <body class="no-audio">
@@ -5819,7 +5859,7 @@ function normalize(s) {
   let pet = s.pet && typeof s.pet === 'object' ? { xp: +s.pet.xp || 0 } : null;
   if (!pet) { let xp = 0; for (const k in cards) xp += cards[k][3] * 3 + cards[k][4]; pet = { xp }; }
   const days = Array.isArray(s.days) ? s.days.filter(x => typeof x === 'string').slice(-90) : [];
-  const game = { best: +(s.game && s.game.best) || 0, plays: +(s.game && s.game.plays) || 0 };
+  const game = { best: +(s.game && s.game.best) || 0, plays: +(s.game && s.game.plays) || 0, mbest: +(s.game && s.game.mbest) || 0 };
   const week = s.week && typeof s.week.id === 'string' ? { id: s.week.id, n: +s.week.n || 0 } : { id: '', n: 0 };
   const gifts = Array.isArray(s.gifts) ? s.gifts.filter(g => g && byId[g.id]).slice(-50) : [];
   const gs = s.gate && typeof s.gate === 'object' ? s.gate : {};
@@ -5830,7 +5870,7 @@ function normalize(s) {
 let S = defaultState();
 try { const raw = localStorage.getItem(LS_KEY); if (raw) S = normalize(JSON.parse(raw)); } catch (e) {}
 function persistLocal() { try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch (e) {} }
-function save() { S.updated = Date.now(); persistLocal(); queueRemote(); }
+function save() { checkMissions(); S.updated = Date.now(); persistLocal(); queueRemote(); }
 function ensureDaily() { const t = today(); if (S.daily.day !== t) S.daily = { day: t, newDone: 0, reviewed: 0, bonus: 0, gnew: 0, gdone: 0, gbonus: 0 }; }
 function markStudied(t) {
   if (S.streak.last !== t) { S.streak.count = S.streak.last === t - 1 ? S.streak.count + 1 : 1; S.streak.last = t; }
@@ -5898,7 +5938,7 @@ function writeMember(force) {
     const studied = S.daily.day === today();
     const body = { uid: couple.me, owner: couple.owner, track: S.settings.track || '', name: S.settings.nick || DEFAULT_NAME[S.settings.track] || '',
       day: studied && (S.daily.reviewed || S.daily.gdone) ? todayStr() : (S.days[S.days.length - 1] || ''), reviewed: studied ? S.daily.reviewed : 0,
-      newDone: studied ? S.daily.newDone : 0, gdone: studied ? (S.daily.gdone || 0) : 0, streak: streakNow(), xp: S.pet.xp, days: S.days.slice(-60), weak: weakList(), gbest: S.game.best, week: S.week && S.week.id === weekId() ? S.week : { id: weekId(), n: 0 }, exam: S.settings.exam || '' };
+      newDone: studied ? S.daily.newDone : 0, gdone: studied ? (S.daily.gdone || 0) : 0, streak: streakNow(), xp: S.pet.xp, days: S.days.slice(-60), weak: weakList(), mis: studied ? misDone() : 0, gbest: S.game.best, week: S.week && S.week.id === weekId() ? S.week : { id: weekId(), n: 0 }, exam: S.settings.exam || '' };
     const key = JSON.stringify(body);
     if (!force && key === couple.lastKey) return;
     try { await couple.db.doc('members/' + segId(couple.me)).set(Object.assign({ updated: Date.now() }, body)); couple.lastKey = key; }
@@ -5918,6 +5958,7 @@ async function sendNote(kind, text, extra) {
   } catch (e) { petSay('보내지 못했어. 잠시 뒤에 다시 해 줘', 'sad', 2400); return false; }
 }
 function onMembers(prev) {
+  if (checkMissions()) save();
   const p = partner();
   const ids = couple.members.map(m => m.uid).filter(id => !couple.profiles[id]);
   if (ids.length && couple.user && couple.user.profiles) couple.user.profiles(ids).then(ps => { Object.assign(couple.profiles, ps || {}); renderPetInfo(); }).catch(() => {});
@@ -6223,6 +6264,27 @@ function usCardHTML() {
   return `<section class="card us" aria-label="우리 둘"><img src="img/couple.webp" alt="수연과 찬우, 그리고 수찬이"><p class="cnames">${names}</p>
     <div class="cstats"><span><b>${coupleStreak()}일</b><small>커플 연속</small></span><span><b>${both}일</b><small>함께 공부한 날</small></span><span><b class="sm">${PET_STAGES[si].name}</b><small>LV.${si + 1}</small></span></div>
     <h3 class="gb-h cal-title">함께 공부한 달력</h3>${calendarHTML()}</section>`;
+}
+const MISSIONS = [
+  { id: 'm1', t: '카드 20장', n: () => Math.min(20, S.daily.reviewed || 0), of: 20 },
+  { id: 'm2', t: '퀴즈 1번', n: () => Math.min(1, S.daily.qz || 0), of: 1 },
+  { id: 'm3', t: '게임 1판', n: () => Math.min(1, S.daily.gp || 0), of: 1 }];
+function misDone() { return (S.daily.mc || []).filter(x => /^m\d$/.test(x)).length; }
+function checkMissions() {
+  if (!S.settings.track || S.daily.day !== today()) return false;
+  const mc = Array.isArray(S.daily.mc) ? S.daily.mc : (S.daily.mc = []); let got = 0, msg = '';
+  MISSIONS.forEach(m => { if (m.n() >= m.of && !mc.includes(m.id)) { mc.push(m.id); got += 5; msg = `미션 완료: ${m.t}! +5 XP`; } });
+  if (misDone() === 3 && !mc.includes('all')) { mc.push('all'); got += 10; msg = '오늘의 미션을 다 했어! 보너스 +10 XP'; }
+  const p = partner();
+  if (misDone() === 3 && p && p.day === todayStr() && +p.mis >= 3 && !mc.includes('duo')) { mc.push('duo'); got += 10; msg = '둘 다 미션 완료! 커플 보너스 +10 XP'; }
+  if (got) { S.pet.xp += got; setTimeout(() => petSay(msg, 'happy', 3200), 60); }
+  return got > 0;
+}
+function missionHTML() {
+  if (!S.settings.track) return '';
+  ensureDaily(); const mc = S.daily.mc || [], p = partner(), pm = p ? (p.day === todayStr() ? +p.mis || 0 : 0) : 0;
+  return `<div class="mis" aria-label="오늘의 미션"><div class="mis-h"><b>오늘의 미션</b><span>${mc.includes('duo') ? '둘 다 완료! 커플 보너스를 받았어요' : `하나에 +5 XP${p ? ` · ${esc(memberName(p))} ${pm}/3` : ''}`}</span></div>
+    <div class="mis-l">${MISSIONS.map(m => { const on = mc.includes(m.id); return `<span class="mi${on ? ' on' : ''}">${on ? svgI('check') : ''}${m.t}${on || m.of === 1 ? '' : ` ${m.n()}/${m.of}`}</span>`; }).join('')}</div></div>`;
 }
 function gateHTML() {
   if (!S.settings.track) return '';
@@ -6531,7 +6593,7 @@ function gamePool() {
 function startGame(gate) {
   if (!S.settings.track) return;
   if (gate && !gateLocked()) gate = false;
-  quiz = null; cancelAnimationFrame(gameRaf);
+  quiz = null; match = null; cancelAnimationFrame(gameRaf);
   game = { gate: gate ? gateScore() : 0, gateIds: gate ? gateIds() : null, passed: false, phase: 'count', count: 3, pool: gate ? gateIds() : gamePool(), recent: [], q: null, n: 0, score: 0, combo: 0, maxCombo: 0, hearts: 3, correct: 0, wrong: 0, level: 1, missed: [], fever: 0, picked: null, mood: 'idle', tLimit: 8000, tStart: 0, pausedAt: 0, prevBest: S.game.best };
   if (couple.banner && couple.banner.kind === 'game') { S.settings.inboxSeen = Math.max(S.settings.inboxSeen || 0, +couple.banner.at || 0); couple.banner = null; save(); }
   tab = 'quiz'; render(); window.scrollTo({ top: 0 });
@@ -6600,6 +6662,7 @@ function endGame() {
   g.xp = g.correct * 2 + (g.newBest ? 5 : 0) + (g.passed ? 10 : 0);
   if (g.newBest) S.game.best = g.score;
   S.game.plays++;
+  ensureDaily(); S.daily.gp = (S.daily.gp || 0) + 1;
   if (g.gate) {
     if (g.passed) {   // 관문 통과: 이번 20개를 비우고, 오늘 새 단어 수가 다 찼어도 다음 20개를 바로 열어 줌
       const done = new Set(g.gateIds);
@@ -6616,6 +6679,54 @@ function endGame() {
   render(); window.scrollTo({ top: 0 });
 }
 function quitGame() { const g = game; if (!g) return; if (g.phase === 'over' || g.n <= 1 && g.correct + g.wrong === 0) { cancelAnimationFrame(gameRaf); const wasGate = g.gate; game = null; if (wasGate) setTab('study'); else render(); return; } endGame(); }
+let match = null, matchTimer = 0;
+const mSec = ms => (ms / 1000).toFixed(1);
+function startMatch() {
+  if (!S.settings.track) return;
+  quiz = null; game = null;
+  const seenM = new Set(), ids = [];
+  shuffle(gamePool().slice()).forEach(id => { const w = byId[id]; if (ids.length < 6 && !seenM.has(w.m) && !seenM.has(w.h)) { seenM.add(w.m); seenM.add(w.h); ids.push(id); } });
+  match = { tiles: shuffle(ids.flatMap(id => [{ id, side: 'w' }, { id, side: 'm' }])), n: ids.length, sel: null, done: [], bad: [], miss: 0, t0: performance.now(), over: false, ms: 0 };
+  tab = 'quiz'; render(); window.scrollTo({ top: 0 });
+  clearInterval(matchTimer);
+  matchTimer = setInterval(() => { if (!match || match.over) { clearInterval(matchTimer); return; } const el = document.getElementById('mtime'); if (el) el.textContent = mSec(performance.now() - match.t0) + '초'; }, 100);
+}
+function matchPick(i) {
+  const m = match; if (!m || m.over || m.bad.length || m.done.includes(i)) return;
+  if (m.sel == null || m.sel === i) { m.sel = m.sel === i ? null : i; render(); return; }
+  const a = m.tiles[m.sel], b = m.tiles[i];
+  if (a.side === b.side) { m.sel = i; render(); return; }
+  if (a.id === b.id) { m.done.push(m.sel, i); m.sel = null; getCard(a.id)[RI]++; if (m.done.length === m.tiles.length) return endMatch(); render(); }
+  else { m.miss++; m.bad = [m.sel, i]; m.sel = null; render(); try { navigator.vibrate && navigator.vibrate(40); } catch (e) {} setTimeout(() => { if (match === m) { m.bad = []; render(); } }, 520); }
+}
+function endMatch() {
+  const m = match; m.over = true; m.ms = performance.now() - m.t0; clearInterval(matchTimer);
+  const prev = S.game.mbest || 0; m.newBest = !prev || m.ms < prev; if (m.newBest) S.game.mbest = Math.round(m.ms);
+  m.xp = m.n + (m.miss === 0 ? 4 : 0);
+  ensureDaily(); S.daily.reviewed += m.n; for (let k = 0; k < m.n; k++) addStudy(); markStudied(today()); S.daily.gp = (S.daily.gp || 0) + 1;
+  addXp(m.xp); save(); writeMember(); render(); window.scrollTo({ top: 0 });
+}
+function matchCardHTML() {
+  const b = S.game.mbest || 0;
+  return `<section class="card mcard" aria-label="짝 맞추기"><div><h2>짝 맞추기</h2><p class="lead">단어 6개와 뜻을 빠르게 짝지어요.${b ? ` 최고 기록 <b>${mSec(b)}초</b>` : ''}</p></div><button class="btn primary" data-action="matchstart">시작</button></section>`;
+}
+function renderMatch() {
+  const m = match;
+  if (m.over) {
+    main.innerHTML = `<section class="card gover" aria-label="짝 맞추기 결과"><div class="go-pet">${gameDinoHTML(m.miss ? 'eat' : 'jump')}</div>
+      <p class="go-label">${m.newBest ? '새 최고 기록!' : '다 맞췄어요!'}</p><p class="go-score">${mSec(m.ms)}<small>초</small></p>
+      <div class="cstats"><span><b>${m.n}쌍</b><small>맞춘 짝</small></span><span><b>${m.miss}번</b><small>틀린 횟수</small></span><span><b>${mSec(S.game.mbest || 0)}초</b><small>최고 기록</small></span></div>
+      <p class="go-xp">수찬이가 <b>+${m.xp} XP</b>를 얻었어요${m.miss ? '' : ' · 한 번도 안 틀려서 보너스!'}</p>
+      <div class="actions"><button class="btn primary" data-action="matchstart">다시 하기</button><button class="btn" data-action="matchexit">퀴즈 화면으로</button></div></section>`;
+    return;
+  }
+  main.innerHTML = `<section class="card mgame" aria-label="짝 맞추기">
+    <div class="m-top"><button class="iconbtn" data-action="matchexit" aria-label="그만하기">${svgI('x')}</button><b>짝 맞추기</b><span class="m-n">${m.done.length / 2}/${m.n}</span><span id="mtime" class="m-time">${mSec(performance.now() - m.t0)}초</span></div>
+    <p class="hint">단어와 뜻을 차례로 눌러 짝을 맞춰요</p>
+    <div class="m-grid">${m.tiles.map((t, i) => { const w = byId[t.id], dn = m.done.includes(i), st = dn ? ' done' : m.bad.includes(i) ? ' bad' : m.sel === i ? ' sel' : '';
+      return `<button class="m-tile ${t.side}${st}" data-action="mt" data-i="${i}" ${dn ? 'disabled' : ''}>${t.side === 'w' ? `<span lang="${w.lang === 'en' ? 'en' : 'zh-CN'}" class="${w.lang === 'en' ? 'en' : 'hz'}">${esc(w.h)}</span>` : `<span>${esc(w.m)}</span>`}</button>`; }).join('')}</div>
+  </section>`;
+}
 function gameBoardHTML() {
   const p = partner(), mine = S.game.best, theirs = p ? +p.gbest || 0 : null, top = Math.max(1, mine, theirs || 0);
   const row = (name, track, v) => `<div class="gb-row"><img class="av" src="${AVATAR[track] || ''}" alt=""><span class="gb-n">${esc(name)}</span><span class="gb-bar"><i style="width:${(v / top * 100).toFixed(1)}%"></i></span><b>${v.toLocaleString()}</b></div>`;
@@ -6677,7 +6788,7 @@ function renderGameOver() {
 
 /* ---------- 퀴즈 ---------- */
 let quiz = null;
-const QLABEL = { meaning: '뜻 고르기', hanzi: '단어 고르기', tone: '성조 고르기', listen: '듣고 고르기', cloze: '빈칸 채우기' };
+const QLABEL = { meaning: '뜻 고르기', hanzi: '단어 고르기', tone: '성조 고르기', listen: '듣고 고르기', cloze: '빈칸 채우기', type: '직접 쓰기' };
 function toneVariants(w) {
   const base = w.syl.map(s => s.t), idxs = w.syl.map((s, i) => s.s === 'r' ? -1 : i).filter(i => i >= 0);
   const seen = new Set([base.join('')]), out = [];
@@ -6690,6 +6801,7 @@ function toneVariants(w) {
   return out;
 }
 function makeQ(w, type, pool) {
+  if (type === 'type') return { type, id: w.id, opts: [], ans: 0 };
   if (type === 'tone') {
     const opts = shuffle([w.syl.map(s => s.t), ...toneVariants(w)]);
     return { type, id: w.id, opts, ans: opts.findIndex(o => o.join('') === w.syl.map(s => s.t).join('')) };
@@ -6701,10 +6813,13 @@ function makeQ(w, type, pool) {
   const opts = shuffle([w.id, ...shuffle(cands).slice(0, 3).map(x => x.id)]);
   return { type, id: w.id, opts, ans: opts.indexOf(w.id) };
 }
-function startQuiz() {
-  const pool = deckWords(), seenW = pool.filter(w => S.cards[w.id] && S.cards[w.id][SN] > 0);
-  const picks = shuffle((seenW.length >= 10 ? seenW : pool).slice()).slice(0, 10);
-  const types = isEn() ? ['meaning', 'hanzi', 'cloze'] : ['meaning', 'hanzi', 'tone', 'cloze'];
+const myWeak = () => weakList().filter(id => byId[id].lang === (isEn() ? 'en' : 'zh'));
+function startQuiz(weak) {
+  match = null;
+  let pool = deckWords(); const seenW = pool.filter(w => S.cards[w.id] && S.cards[w.id][SN] > 0);
+  let picks = shuffle((seenW.length >= 10 ? seenW : pool).slice()).slice(0, 10);
+  if (weak === true && myWeak().length >= 4) { picks = shuffle(myWeak().map(id => byId[id])).slice(0, 10); pool = WORDS.filter(x => x.lang === picks[0].lang); }
+  const types = isEn() ? ['meaning', 'hanzi', 'type', 'cloze'] : ['meaning', 'hanzi', 'tone', 'type', 'cloze'];
   if (hasAudio(TR().voice)) types.push('listen');
   const order = shuffle(Array.from({ length: picks.length }, (_, i) => types[i % types.length]));
   const qs = picks.map((w, i) => {
@@ -6716,7 +6831,23 @@ function startQuiz() {
   quiz = { qs, i: 0, picked: null, score: 0, missed: [] };
   render(); autoListen();
 }
-function autoListen() { const q = quiz && quiz.qs[quiz.i]; if (q && q.type === 'listen' && quiz.picked == null) speak(byId[q.id].h, byId[q.id].lang); }
+function autoListen() { const q = quiz && quiz.qs[quiz.i]; if (q && q.type === 'listen' && quiz.picked == null) speak(byId[q.id].h, byId[q.id].lang); const ti = document.getElementById('typein'); if (ti && !ti.disabled) ti.focus({ preventScroll: true }); }
+const normType = (w, v) => (w.lang === 'en' ? String(v).toLowerCase() : plainPy(String(v))).replace(/[^a-z]/g, '');
+function typeAnswer(val) {
+  if (!quiz || quiz.picked != null || quiz.i >= quiz.qs.length) return;
+  const q = quiz.qs[quiz.i]; if (q.type !== 'type') return;
+  const w = byId[q.id], ok = !!val && normType(w, val) === normType(w, w.lang === 'en' ? w.h : w.p);
+  quiz.typed = val; quiz.picked = ok ? 0 : -1;
+  ensureDaily(); S.daily.reviewed++; addStudy(); markStudied(today());
+  const c = getCard(q.id);
+  if (ok) { quiz.score++; c[RI]++; if (!addXp(3)) petSay(pick1(L().good), 'happy', 1600); }
+  else { quiz.missed.push(q.id); c[B] = 1; c[D] = today(); c[WR]++; petSay(pick1(L().again), 'sad', 1600); }
+  save(); render();
+}
+function typeFormHTML(q, w, answered) {
+  const ok = quiz.picked === q.ans;
+  return `<form class="typef${answered ? (ok ? ' right' : ' wrong') : ''}" data-form="type"><input id="typein" type="text" lang="en" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="${w.lang === 'en' ? '영어 단어' : '병음 (성조 없이)'}" value="${esc(quiz.typed || '')}" ${answered ? 'disabled' : ''}>${answered ? '' : '<button class="btn primary" type="submit">확인</button>'}</form>${answered ? '' : '<button class="link typeskip" data-action="typeskip">모르겠어요</button>'}`;
+}
 function pick(i) {
   if (!quiz || quiz.picked != null || quiz.i >= quiz.qs.length) return;
   const q = quiz.qs[quiz.i]; if (i < 0 || i >= q.opts.length) return;
@@ -6727,7 +6858,7 @@ function pick(i) {
   else { quiz.missed.push(q.id); c[B] = 1; c[D] = today(); c[WR]++; petSay(pick1(L().again), 'sad', 1600); }
   save(); render();
 }
-function nextQ() { if (!quiz || quiz.picked == null) return; quiz.i++; quiz.picked = null; if (quiz.i >= quiz.qs.length && quiz.from && !quiz.reported) finishPartnerQuiz(); render(); autoListen(); }
+function nextQ() { if (!quiz || quiz.picked == null) return; quiz.i++; quiz.picked = null; quiz.typed = ''; if (quiz.i >= quiz.qs.length) { ensureDaily(); S.daily.qz = (S.daily.qz || 0) + 1; save(); } if (quiz.i >= quiz.qs.length && quiz.from && !quiz.reported) finishPartnerQuiz(); render(); autoListen(); }
 function startPartnerQuiz() {
   const it = couple.pendingQuiz; if (!it) return;
   const ids = it.ids.filter(id => byId[id]).slice(0, 5); if (!ids.length) return;
@@ -6747,19 +6878,22 @@ function finishPartnerQuiz() {
 const quizFrom = () => memberName(couple.members.find(m => quiz && m.uid === quiz.from), '짝꿍');
 function renderQuiz() {
   if (game) return renderGame();
+  if (match) return renderMatch();
   const dn = (deckDef(S.settings.deck) || {}).name;
   if (!quiz) {
     const pq = couple.pendingQuiz, pqn = pq ? memberName(couple.members.find(m => m.uid === pq.from), '짝꿍') : '';
     main.innerHTML = `${pq ? `<div class="pq" role="status">${HEART('var(--pink)')}<span>${josa(esc(pqn), '이', '가')} 낸 퀴즈 ${pq.ids.length}문제가 있어요</span><button class="btn small pink" data-action="pquiz">풀기</button></div>` : ''}
       ${gameCardHTML()}
+      ${matchCardHTML()}
       <section class="card quiz" aria-label="퀴즈 시작">
         <div class="card-top"><span class="chip">${dn} · ${deckWords().length.toLocaleString()}단어</span></div>
         <div class="prompt" style="align-items:flex-start">
           <h2>10문제 퀴즈</h2>
           <p class="lead">고른 묶음에서 문제를 냅니다. 학습한 단어가 10개 이상이면 그 단어들로 출제해요. 틀린 단어는 바로 오늘 복습할 카드에 들어갑니다. 빈칸 채우기는 예문이 저장된 단어에서만 나와요.</p>
-          <div class="types"><span class="chip">뜻 고르기</span><span class="chip">단어 고르기</span>${isEn() ? '' : '<span class="chip">성조 고르기</span>'}<span class="chip">빈칸 채우기</span>${hasAudio(TR().voice) ? '<span class="chip">듣고 고르기</span>' : ''}</div>
+          <div class="types"><span class="chip">뜻 고르기</span><span class="chip">단어 고르기</span>${isEn() ? '' : '<span class="chip">성조 고르기</span>'}<span class="chip">직접 쓰기</span><span class="chip">빈칸 채우기</span>${hasAudio(TR().voice) ? '<span class="chip">듣고 고르기</span>' : ''}</div>
         </div>
         <button class="btn primary wide" data-action="qstart">퀴즈 시작 <kbd>Enter</kbd></button>
+        ${myWeak().length >= 4 ? `<button class="btn wide" data-action="qweak">자주 틀린 단어만 풀기 · ${Math.min(10, myWeak().length)}개</button>` : ''}
       </section>`;
     return;
   }
@@ -6781,7 +6915,8 @@ function renderQuiz() {
   let prompt, optCls, optHTML;
   const wordOpt = id => en ? `<span lang="en">${esc(byId[id].h)}</span>` : `<span lang="zh-CN">${answered ? hzColored(byId[id]) : byId[id].h}</span>`;
   const wcls = en ? 'enopt' : 'han';
-  if (q.type === 'meaning') { prompt = (en ? enCard(w) : tzg(w, { color: answered, py: answered })) + '<p class="hint">이 단어의 뜻은?</p>'; optCls = ''; optHTML = id => byId[id].m; }
+  if (q.type === 'type') { prompt = en ? `<p class="mean-big">${w.m}</p><span class="pos">${w.pos}</span><p class="hint">영어 단어를 직접 써 보세요 · <b>${esc(w.h[0])}</b>로 시작, ${w.h.length}글자</p>` : tzg(w, { color: answered, py: answered }) + `<p class="hint">${answered ? w.m : '병음을 직접 써 보세요 (성조 없이, 예: nihao)'}</p>`; optCls = ''; optHTML = () => ''; }
+  else if (q.type === 'meaning') { prompt = (en ? enCard(w) : tzg(w, { color: answered, py: answered })) + '<p class="hint">이 단어의 뜻은?</p>'; optCls = ''; optHTML = id => byId[id].m; }
   else if (q.type === 'hanzi') { prompt = `<p class="mean-big">${w.m}</p><span class="pos">${w.pos}</span><p class="hint">이 뜻의 단어를 고르세요</p>`; optCls = wcls; optHTML = wordOpt; }
   else if (q.type === 'listen') { prompt = spkBtn(w.h, w.lang, '다시 듣기', 'big') + '<p class="hint">들은 단어를 고르세요</p>'; optCls = wcls; optHTML = wordOpt; }
   else if (q.type === 'cloze') {
@@ -6807,7 +6942,7 @@ function renderQuiz() {
       <div class="card-top"><span class="chip">${QLABEL[q.type]}</span>${quiz.from ? `<span class="chip pink">${esc(quizFrom())}의 퀴즈</span>` : ''}<span class="remain">${quiz.i + 1} / ${quiz.qs.length}</span>
         <div class="qbar"><i style="width:${(quiz.i + (answered ? 1 : 0)) / quiz.qs.length * 100}%"></i></div></div>
       <div class="prompt">${prompt}</div>
-      <div class="opts" role="group" aria-label="보기">${opts}</div>
+      ${q.type === 'type' ? typeFormHTML(q, w, answered) : `<div class="opts" role="group" aria-label="보기">${opts}</div>`}
       ${answered ? `<div class="fb" aria-live="polite"><span class="verdict ${ok ? 'ok' : 'no'}">${ok ? '정답' : '오답'}</span>
         <span class="fbw"><span class="h" ${en ? 'style="font-family:var(--font-en)"' : 'lang="zh-CN"'}>${hzColored(w)}</span>${en ? '' : `<span class="p">${pyText(w, null, true)}</span>`}<span>${w.m}</span></span>
         ${spkBtn(w.h, w.lang, '단어 듣기')}<button class="btn primary" data-action="qnext">${last ? '결과 보기' : '다음 문제'} <kbd>Enter</kbd></button></div>` : ''}
@@ -7030,7 +7165,7 @@ function render() {
   renderHeader();
   if (!S.settings.track) { renderPick(); renderSide(); return; }
   if (tab === 'study') renderStudy(); else if (tab === 'quiz') renderQuiz(); else if (tab === 'gram') renderGram(); else renderList();
-  if (!(game && tab === 'quiz')) main.insertAdjacentHTML('afterbegin', bannerHTML() + (tab === 'study' ? coupleCardHTML() + deckbarHTML() + gateHTML() : ''));
+  if (!(game && tab === 'quiz')) main.insertAdjacentHTML('afterbegin', bannerHTML() + (tab === 'study' ? coupleCardHTML() + missionHTML() + deckbarHTML() + gateHTML() : ''));
   if (tab === 'study') main.insertAdjacentHTML('beforeend', usCardHTML());
   paintPet(performance.now());
   renderSide();
@@ -7045,7 +7180,7 @@ document.addEventListener('click', e => {
   if (!ex.gesture) { ex.gesture = true; if (ex.state === 'need') { ex.state = 'idle'; pumpEx(); } }
   const el = e.target.closest('[data-action]'); if (!el || el.disabled) return;
   const a = el.dataset.action;
-  if (a === 'tab') { if (game && game.phase === 'over') game = null; setTab(el.dataset.tab); }
+  if (a === 'tab') { if (game && game.phase === 'over') game = null; if (match && match.over) match = null; setTab(el.dataset.tab); }
   else if (a === 'track') setTrack(el.dataset.v);
   else if (a === 'flip') flip();
   else if (a === 'rate') rate(+el.dataset.r);
@@ -7059,6 +7194,11 @@ document.addEventListener('click', e => {
   else if (a === 'order') { S.settings.order = el.dataset.v; save(); if (!session.flipped) buildQueue(); render(); }
   else if (a === 'tone') { S.settings.tone = !S.settings.tone; save(); render(); }
   else if (a === 'qstart') startQuiz();
+  else if (a === 'qweak') startQuiz(true);
+  else if (a === 'typeskip') typeAnswer('');
+  else if (a === 'matchstart') startMatch();
+  else if (a === 'matchexit') { match = null; clearInterval(matchTimer); render(); }
+  else if (a === 'mt') matchPick(+el.dataset.i);
   else if (a === 'gamestart') startGame();
   else if (a === 'gatestart') startGame(true);
   else if (a === 'gatenext') { game = null; buildQueue(); setTab('study'); }
@@ -7115,6 +7255,7 @@ document.addEventListener('input', e => { if (e.target.id === 'q') { listQ = e.t
 document.addEventListener('change', e => {
   if (e.target.id === 'exam') { S.settings.exam = /^\d{4}-\d{2}-\d{2}$/.test(e.target.value) ? e.target.value : ''; save(); writeMember(); const db = document.querySelector('.deckbar'); render(); return; }
   if (e.target.id === 'nick') { S.settings.nick = e.target.value.trim().slice(0, 12); save(); writeMember(); renderPetInfo(); } });
+document.addEventListener('submit', e => { const f = e.target.closest && e.target.closest('form[data-form="type"]'); if (!f) return; e.preventDefault(); const v = f.querySelector('input').value.trim(); if (v) typeAnswer(v); });
 document.addEventListener('keydown', e => {
   if (sheet) { if (e.key === 'Escape') closeSheet(); return; }
   if (e.target.closest && e.target.closest('input, textarea')) return;
@@ -7134,6 +7275,7 @@ document.addEventListener('keydown', e => {
     else if (game.phase === 'play' && game.picked == null && ['1', '2', '3', '4'].includes(k)) gamePick(+k - 1);
     else if (game.phase === 'over' && k === 'Enter' && e.target === document.body) { e.preventDefault(); startGame(); }
   } else if (tab === 'quiz') {
+    if (match) return;
     if (!quiz || quiz.i >= quiz.qs.length) { if (k === 'Enter' && e.target === document.body) { e.preventDefault(); startQuiz(); } }
     else if (quiz.picked == null && ['1', '2', '3', '4'].includes(k)) pick(+k - 1);
     else if (quiz.picked != null && (k === 'Enter' || k === ' ')) { e.preventDefault(); nextQ(); }
