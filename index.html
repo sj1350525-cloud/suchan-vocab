@@ -1053,6 +1053,48 @@ body.gaming .banner { display: none; }
 .m-tile.done { opacity: .22; background: var(--mint-soft); border-color: var(--mint-line); }
 @keyframes mshake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 @media (prefers-reduced-motion: reduce) { .m-tile.bad { animation: none; } }
+
+/* 듣기 훈련 */
+.lbtns { display: grid; justify-items: center; gap: 6px; }
+.slowbtn { font-size: 13.5px; }
+.opts.one { grid-template-columns: 1fr !important; gap: 8px; }
+.opts.one .opt { min-height: 0; padding: 12px 14px; flex-direction: row; justify-content: flex-start; text-align: left; gap: 10px; }
+.opts.one .opt .k { font-size: 20px; flex: none; }
+.opts.one .opt .v { font-size: 14.5px; }
+.lcard { background: var(--mint-soft); }
+/* 시험 유형 */
+.exam .card-top .link { margin-left: 6px; }
+.mean-mid { margin: 0; font-size: 19px; font-weight: 700; line-height: 1.45; text-align: center; }
+.od-line { min-height: 62px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 10px; border-radius: 16px; border: 2px dashed var(--line); background: var(--soft); }
+.od-line.right { border-style: solid; border-color: var(--mint-deep); background: var(--mint-soft); }
+.od-line.wrong { border-style: solid; border-color: var(--bad); }
+.od-ph { color: var(--muted); font-size: 13px; margin: 0 auto; }
+.od-bank { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; min-height: 48px; }
+.od-chip { padding: 9px 13px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); font-size: 17px; font-weight: 600; }
+.od-chip:lang(en) { font-family: var(--font-en); font-size: 15.5px; }
+.od-chip.on { border-color: var(--mint-line); background: #fff; }
+.od-chip.used { opacity: .25; }
+.exp { margin: 0; padding: 12px 14px; border-radius: 14px; background: var(--soft); font-size: 13.5px; line-height: 1.6; color: var(--ink); }
+.exp b { font-size: 15px; }
+/* 주간 리포트 */
+.rp-lead { margin: 0; font-weight: 700; line-height: 1.5; }
+.rp-bars { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; height: 130px; align-items: end; padding-top: 16px; }
+.rb { position: relative; height: 100%; display: grid; grid-template-rows: 1fr auto; justify-items: center; gap: 4px; }
+.rb i { align-self: end; width: 70%; border-radius: 8px 8px 3px 3px; background: var(--mint-line); display: block; min-height: 3px; }
+.rb.td i { background: var(--mint-deep); }
+.rb small { font-size: 12px; color: var(--muted); font-weight: 700; }
+.rb.td small { color: var(--ink); }
+.rb b { position: absolute; top: -14px; font-size: 11px; color: var(--muted); font-weight: 700; }
+/* 기념일·앨범 */
+.anniv { margin: -4px 0 0; text-align: center; font-size: 14px; color: var(--muted); }
+.anniv b { color: #d9487a; font-size: 16px; }
+.anniv.sp { color: #d9487a; font-weight: 800; }
+.album { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; width: 100%; }
+.al { display: grid; justify-items: center; gap: 2px; padding: 8px 2px; border-radius: 14px; background: var(--soft); text-align: center; }
+.al img { width: 100%; max-width: 62px; aspect-ratio: 1; object-fit: contain; }
+.al b { font-size: 11.5px; font-weight: 800; line-height: 1.3; }
+.al small { font-size: 10.5px; color: var(--muted); }
+.al.lock img { filter: brightness(0) opacity(.18); }
 </style>
 </head>
 <body class="no-audio">
@@ -5740,6 +5782,7 @@ const SEED_EX = {"3098":["这所大学的图书馆很大。","Zhè suǒ dàxué 
 const SEED_EN = {"e1":["Please tell Mister Brown that his order has arrived.","브라운 씨에게 주문하신 물건이 도착했다고 전해 주세요."],"e2":["The annual sales conference will be held in Busan next month.","연례 영업 회의가 다음 달 부산에서 열린다."],"e3":["Ms. Park will be on vacation until Friday.","박 씨는 금요일까지 휴가 중이다."],"e4":["We need to send the revised contract to the client today.","오늘 수정된 계약서를 고객에게 보내야 한다."],"e5":["The e-book version is cheaper than the printed copy.","전자책은 종이책보다 저렴하다."],"e6":["A shuttle bus runs between the hotel and the airport every hour.","호텔과 공항 사이에 셔틀버스가 매시간 운행된다."],"e7":["Please read the memo about the new parking policy.","새 주차 정책에 관한 회람을 읽어 주세요."],"e8":["I'd like to make a reservation for four people at seven.","7시에 네 명 예약하고 싶습니다."],"e9":["Moving the meeting to Monday seems like the logical choice.","회의를 월요일로 옮기는 것이 타당한 선택으로 보인다."],"e10":["Could you fax the signed form to our office?","서명한 양식을 저희 사무실로 팩스로 보내 주시겠어요?"],"e11":["The store opens at nine o'clock on weekdays.","그 가게는 평일 9시 정각에 문을 연다."],"e12":["We sincerely apologize for the delay in shipping.","배송 지연에 대해 진심으로 사과드립니다."],"e13":["Let's have lunch together sometime next week.","다음 주 언젠가 같이 점심 먹어요."],"e14":["Detailed directions are available on our website.","자세한 오시는 길은 저희 웹사이트에서 보실 수 있습니다."],"e15":["Ask your supervisor before you change your schedule.","일정을 바꾸기 전에 상사에게 물어보세요."],"e16":["Three candidates will be invited for a second interview.","지원자 세 명이 2차 면접에 초대될 것이다."],"e17":["You can get a full refund within 30 days of purchase.","구매 후 30일 이내에 전액 환불을 받을 수 있다."],"e18":["The goods were damaged during shipping.","상품이 배송 중에 파손되었다."],"e19":["All new employees must attend the safety workshop.","모든 신입 사원은 안전 워크숍에 참석해야 한다."],"e20":["Our new office is located downtown near the city hall.","새 사무실은 시청 근처 시내에 있다."],"e21":["The deadline for the report is this Thursday.","보고서 마감은 이번 주 목요일이다."],"e22":["Please pay the invoice by the end of the month.","월말까지 청구서 금액을 지불해 주세요."],"e23":["You can find the price list in the brochure.","가격표는 안내 책자에서 보실 수 있습니다."],"e24":["The package should arrive by noon tomorrow.","소포는 내일 정오까지 도착할 것이다."],"e25":["Our accountant is reviewing last year's tax records.","우리 회계사가 작년 세금 기록을 검토하고 있다."],"e26":["The clerk helped me find the right size.","점원이 맞는 사이즈를 찾도록 도와주었다."],"e27":["Let's meet in the hotel lobby at eight.","8시에 호텔 로비에서 만나요."],"e28":["The company publishes its annual report every March.","그 회사는 매년 3월에 연례 보고서를 발표한다."],"e29":["Please send your résumé and a cover letter by email.","이력서와 자기소개서를 이메일로 보내 주세요."],"e30":["I have enclosed a copy of the receipt with this letter.","이 편지에 영수증 사본을 동봉했습니다."],"e31":["Each applicant must have at least two years of experience.","지원자는 최소 2년의 경력이 있어야 한다."],"e32":["The marketing seminar starts at 10 a.m. in Room 3.","마케팅 세미나는 3번 방에서 오전 10시에 시작한다."],"e33":["A technician will come to repair the printer this afternoon.","오늘 오후에 기술자가 프린터를 고치러 올 것이다."],"e34":["Clean the screen with a soft, dry cloth.","부드럽고 마른 천으로 화면을 닦으세요."],"e35":["The bus fare went up by ten percent this year.","올해 버스 요금이 10퍼센트 올랐다."],"e36":["Keep your receipt in case you need to return the item.","반품할 경우를 대비해 영수증을 보관하세요."],"e37":["Business travelers can use the lounge for free.","출장 여행객은 라운지를 무료로 이용할 수 있다."],"e38":["The caller asked to speak with the sales manager.","전화를 건 사람이 영업부장과 통화하고 싶다고 했다."],"e39":["Taking the subway is the fastest way to get there.","지하철을 타는 것이 그곳에 가는 가장 빠른 방법이다."],"e40":["Please do not leave your luggage unattended.","짐을 방치하지 마세요."],"e41":["The next shipment is expected to arrive on Monday.","다음 배송품은 월요일에 도착할 예정이다."],"e42":["What can be inferred about the new manager?","새 관리자에 대해 무엇을 추론할 수 있는가?"],"e43":["The waiter recommended the fish of the day.","웨이터가 오늘의 생선 요리를 추천했다."],"e44":["The car rental includes free insurance.","렌터카 요금에는 무료 보험이 포함되어 있다."],"e45":["This laptop comes with a two-year warranty.","이 노트북은 2년 품질 보증이 제공된다."],"e46":["The cafeteria on the first floor closes at 2 p.m.","1층 구내식당은 오후 2시에 문을 닫는다."],"e47":["The new chef changed the entire dinner menu.","새 요리사가 저녁 메뉴를 전부 바꿨다."],"e48":["The elevator is out of order, so please use the stairs.","엘리베이터가 고장 났으니 계단을 이용해 주세요."],"e49":["Please check in at the reception desk when you arrive.","도착하시면 접수처에서 체크인해 주세요."],"e50":["Make sure all the forms are filled out correctly.","모든 양식이 정확하게 작성되었는지 확인하세요."],"e51":["We signed a five-year lease for the new office.","우리는 새 사무실에 대해 5년 임대 계약을 맺었다."],"e52":["Many employees ride a bicycle to work.","많은 직원들이 자전거로 출근한다."],"e53":["We will notify you by email when your order ships.","주문품이 발송되면 이메일로 알려 드리겠습니다."],"e54":["Customers can preview the new collection online.","고객들은 새 컬렉션을 온라인으로 미리 볼 수 있다."],"e55":["The parking attendant will show you where to park.","주차 안내원이 주차할 곳을 알려 줄 것이다."],"e56":["Your magazine subscription will expire next month.","잡지 구독이 다음 달에 만료된다."],"e57":["Is Tuesday afternoon convenient for you?","화요일 오후가 편하신가요?"],"e58":["Read the user manual before using the machine.","기계를 사용하기 전에 사용 설명서를 읽으세요."],"e59":["The police are still looking for clues.","경찰이 아직 단서를 찾고 있다."],"e60":["The car is being repaired at the garage.","차가 정비소에서 수리 중이다."],"e61":["Visitors must obtain a pass at the front desk.","방문객은 안내 데스크에서 출입증을 받아야 한다."],"e62":["The meeting room has a large oval table.","회의실에는 큰 타원형 탁자가 있다."],"e63":["We check our inventory at the end of every month.","우리는 매달 말에 재고를 확인한다."],"e64":["The outdoor concert was canceled because of the rain.","비 때문에 야외 콘서트가 취소되었다."],"e65":["My suitcase was lost on the flight to London.","런던행 비행기에서 내 여행 가방을 잃어버렸다."],"e66":["Jeju Island is a popular holiday destination.","제주도는 인기 있는 휴가 여행지이다."],"e67":["Please write your name and occupation on the form.","양식에 이름과 직업을 적어 주세요."],"e68":["The board meeting has been postponed until next week.","이사회 회의가 다음 주로 연기되었다."],"e69":["The new data contradicts the earlier report.","새 데이터는 이전 보고서와 모순된다."],"e70":["Don't forget to take an umbrella today.","오늘 우산 챙기는 거 잊지 마."],"e71":["Make an inference based on the information in the article.","기사의 정보를 바탕으로 추론하세요."],"e72":["Please turn off your cellphone during the performance.","공연 중에는 휴대 전화를 꺼 주세요."],"e73":["This compact camera fits easily in your pocket.","이 소형 카메라는 주머니에 쉽게 들어간다."],"e74":["All merchandise is 20 percent off this weekend.","이번 주말에 모든 상품이 20퍼센트 할인된다."],"e75":["The receptionist will give you a visitor badge.","접수 담당자가 방문객 배지를 드릴 것입니다."],"e76":["I have an appointment with the dentist at four.","4시에 치과 예약이 있다."],"e77":["Please bring a photo identification to the exam.","시험에 사진이 있는 신분증을 가져오세요."],"e78":["Show this coupon to get a free drink.","이 쿠폰을 보여 주면 음료를 무료로 받을 수 있다."],"e79":["The train departs from platform 5 at 8:15.","기차는 5번 승강장에서 8시 15분에 출발한다."],"e80":["Can we reschedule the interview for Thursday?","면접을 목요일로 다시 잡을 수 있을까요?"],"e81":["The company changed its sales tactics last year.","그 회사는 작년에 판매 전략을 바꿨다."],"e82":["The library is closed for renovation until May.","도서관은 5월까지 보수 공사로 문을 닫는다."],"e83":["We plan to upgrade our computer system this year.","올해 컴퓨터 시스템을 업그레이드할 계획이다."],"e84":["A short speech will precede the awards ceremony.","시상식에 앞서 짧은 연설이 있을 것이다."],"e85":["We will send you a replacement free of charge.","무료로 교체품을 보내 드리겠습니다."],"e86":["Guests can dine on the terrace in the summer.","여름에는 손님들이 테라스에서 식사할 수 있다."],"e87":["Your passport must be valid for at least six months.","여권은 최소 6개월 이상 유효해야 한다."],"e88":["I often have lunch with my coworkers.","나는 동료들과 자주 점심을 먹는다."],"e89":["Please review the agenda for the upcoming meeting.","다가오는 회의의 안건을 검토해 주세요."],"e90":["The files are kept in the cabinet next to the window.","서류는 창문 옆 캐비닛에 보관되어 있다."],"e91":["The store sells kitchen appliances at low prices.","그 가게는 주방 가전을 싼 가격에 판다."],"e92":["Each chart comes with an explanatory note.","각 도표에는 설명 주석이 달려 있다."],"e93":["Our yoga instructor is very patient.","우리 요가 강사는 참을성이 많다."],"e94":["Some keys on my keyboard are not working.","내 키보드의 몇몇 키가 작동하지 않는다."],"e95":["The new product received a lot of media attention.","신제품은 언론의 많은 관심을 받았다."],"e96":["There is a supermarket across the street.","길 건너편에 슈퍼마켓이 있다."],"e97":["This ticket is valid for one month.","이 표는 한 달 동안 유효하다."],"e98":["Admission to the museum is free on Sundays.","일요일에는 박물관 입장이 무료이다."],"e99":["Employees can borrow a laptop from the IT department.","직원들은 IT 부서에서 노트북을 빌릴 수 있다."],"e100":["Please underline the key points in the document.","문서의 중요한 부분에 밑줄을 그어 주세요."]};
 /* 문법: HSK 5·6급 64개(이전 HSK 대강의 5·6급 문법 항목과 시험에 자주 나오는 구문), 토익 Part 5·6 문법 30개 */
 const GRAMMAR = [{"id":"z5-01","lang":"zh","lv":5,"cat":"특수 구문","pat":"(주어)+所+동사+的+명사","ko":"~가 …하는 (바의)","note":"동사 앞에 붙어 그 동사의 대상을 가리켜요. 글말에서 많이 쓰고, 所를 빼도 뜻은 크게 바뀌지 않아요.","ex":"这正是我所担心的问题。","py":"zhè zhèngshì wǒ suǒ dānxīn de wèntí.","exko":"이게 바로 내가 걱정하던 문제예요.","q":"我___认识的他是一个很诚实的人。","o":["所","被","把","让"],"qko":"내가 아는 그는 아주 정직한 사람이에요."},{"id":"z5-02","lang":"zh","lv":5,"cat":"특수 구문","pat":"A+令+B+동사/형용사","ko":"A가 B를 ~하게 하다","note":"让·使와 같은 사역 표현으로, 감정이나 상태를 일으킬 때 주로 써요. 글말 느낌이 조금 더 강해요.","ex":"他的回答令老师很满意。","py":"tā de huídá lìng lǎoshī hěn mǎnyì.","exko":"그의 대답은 선생님을 매우 만족시켰어요.","q":"这个好消息___大家非常兴奋。","o":["令","把","被","对"],"qko":"이 좋은 소식은 모두를 아주 들뜨게 했어요."},{"id":"z5-03","lang":"zh","lv":5,"cat":"비교","pat":"A+不如+B(+형용사)","ko":"A는 B만 못하다","note":"B가 더 낫다는 뜻이에요. 뒤에 형용사가 오면 'A는 B만큼 ~하지 않다'가 돼요.","ex":"我的汉语水平不如他。","py":"wǒ de hànyǔ shuǐpíng bùrú tā.","exko":"내 중국어 실력은 그 사람만 못해요.","q":"坐公交车___骑自行车方便。","o":["不如","比较","而且","虽然"],"qko":"버스 타는 게 자전거 타는 것만큼 편하지 않아요."},{"id":"z5-04","lang":"zh","lv":5,"cat":"개사","pat":"동사+于+시간·장소","ko":"~에, ~에서 (글말)","note":"在·从과 비슷한 뜻을 글말로 나타내요. 建于, 位于, 生于처럼 동사 바로 뒤에 붙는 경우가 많아요.","ex":"这所大学位于城市的东边。","py":"zhèsuǒ dàxué wèiyú chéngshì de dōngbiān.","exko":"이 대학은 도시 동쪽에 있어요.","q":"这座寺庙建___明朝。","o":["于","从","给","向"],"qko":"이 절은 명나라 때 지어졌어요."},{"id":"z5-05","lang":"zh","lv":5,"cat":"개사","pat":"朝+방향/대상+동사","ko":"~을 향해","note":"몸이나 동작이 향하는 방향을 나타내요. 向과 비슷하지만 朝는 눈에 보이는 동작에 더 자주 써요.","ex":"窗户朝南，房间里很亮。","py":"chuānghù cháonán, fángjiān lǐ hěnliàng.","exko":"창문이 남향이라 방이 밝아요.","q":"他笑着___我走了过来。","o":["朝","把","被","让"],"qko":"그는 웃으면서 내 쪽으로 걸어왔어요."},{"id":"z5-06","lang":"zh","lv":5,"cat":"접속 구문","pat":"A、B以及C","ko":"그리고, 및","note":"명사나 구를 나열할 때 마지막 항목 앞에 써요. 和보다 격식 있는 말이에요.","ex":"参加会议的有经理、主任以及各部门的代表。","py":"cānjiā huìyì de yǒu jīnglǐ, zhǔrèn yǐjí gè bùmén de dàibiǎo.","exko":"회의에는 사장, 주임 및 각 부서 대표가 참석했어요.","q":"会议讨论了工资、休假___培训等问题。","o":["以及","并且","于是","而是"],"qko":"회의에서 임금, 휴가 및 교육 문제를 논의했어요."},{"id":"z5-07","lang":"zh","lv":5,"cat":"부사","pat":"(一/只要…)+便+동사","ko":"곧, 바로 (=就, 글말)","note":"앞의 일이 일어나자 곧 뒤의 일이 이어질 때 써요. 뜻은 就와 같고 글말에서 써요.","ex":"只要有时间，他便去图书馆看书。","py":"zhǐyào yǒu shíjiān, tā biàn qù túshūguǎn kànshū.","exko":"시간만 있으면 그는 바로 도서관에 가서 책을 봐요.","q":"他一到家___开始做饭。","o":["便","才","再","还"],"qko":"그는 집에 도착하자마자 밥을 하기 시작했어요."},{"id":"z5-08","lang":"zh","lv":5,"cat":"부사","pat":"始终+동사/형용사","ko":"처음부터 끝까지, 줄곧","note":"어떤 상태가 처음부터 끝까지 변하지 않았음을 강조해요. 一直와 달리 앞으로의 일에는 잘 쓰지 않아요.","ex":"比赛中他始终保持冷静。","py":"bǐsài zhōng tā shǐzhōng bǎochí lěngjìng.","exko":"경기 내내 그는 침착함을 유지했어요.","q":"他___没有告诉我事情的真相。","o":["始终","已经","马上","将要"],"qko":"그는 끝까지 나에게 사건의 진상을 말하지 않았어요."},{"id":"z5-09","lang":"zh","lv":5,"cat":"접속 구문","pat":"幸亏A，不然B","ko":"A해서 다행이지, 아니었으면 B","note":"좋은 조건 덕분에 나쁜 결과를 피했다는 뜻이에요. 不然 대신 要不然·否则도 써요.","ex":"幸亏带了伞，不然就被淋湿了。","py":"xìngkuī dài le sǎn, bùrán jiù bèi línshī le.","exko":"우산을 가져와서 다행이지, 안 그랬으면 비에 젖었을 거예요.","q":"___你提醒我，不然我就忘了。","o":["幸亏","尽管","即使","既然"],"qko":"네가 알려 줘서 다행이야, 안 그랬으면 잊어버렸을 거야."},{"id":"z5-10","lang":"zh","lv":5,"cat":"접속 구문","pat":"不但不/没A，反而B","ko":"A하기는커녕 오히려 B하다","note":"기대와 반대되는 결과가 나왔을 때 써요. 앞부분은 반드시 부정형이에요.","ex":"吃了药，他的病不但没好，反而更重了。","py":"chī le yào, tā de bìng búdàn méihǎo, fǎn'ér gèngzhòng le.","exko":"약을 먹었는데 그의 병은 낫기는커녕 오히려 더 심해졌어요.","q":"雨不但没停，___越下越大了。","o":["反而","因此","于是","所以"],"qko":"비가 그치기는커녕 오히려 점점 더 세게 내렸어요."},{"id":"z5-11","lang":"zh","lv":5,"cat":"접속 구문","pat":"宁可A，也不/也要B","ko":"차라리 A할지언정 B하지 않겠다","note":"손해를 감수하고 A를 고르는 마음을 나타내요. 也要가 오면 'A하더라도 B하겠다'가 돼요.","ex":"他宁可多花点钱，也要买质量好的。","py":"tā nìngkě duōhuādiǎn qián, yě yào mǎi zhìliàng hǎo de.","exko":"그는 돈을 좀 더 쓰더라도 품질 좋은 걸 사려고 해요.","q":"我___走路回家，也不坐他的车。","o":["宁可","如果","因为","只要"],"qko":"나는 차라리 걸어서 집에 갈지언정 그의 차는 타지 않겠어요."},{"id":"z5-12","lang":"zh","lv":5,"cat":"접속 구문","pat":"与其A，不如B","ko":"A하느니 차라리 B하는 게 낫다","note":"두 가지를 비교해서 B를 고를 때 써요. A가 덜 좋은 쪽이에요.","ex":"与其坐着等，不如自己去找。","py":"yǔqí zuò zhe děng, bùrú zìjǐ qù zhǎo.","exko":"앉아서 기다리느니 차라리 직접 찾으러 가는 게 나아요.","q":"与其在家发愁，___出去走走。","o":["不如","而且","因此","何况"],"qko":"집에서 걱정하느니 차라리 나가서 좀 걷는 게 나아요."},{"id":"z5-13","lang":"zh","lv":5,"cat":"접속 구문","pat":"万一A，(就)B","ko":"만일 A하면 B","note":"일어날 가능성이 낮은, 주로 좋지 않은 일을 가정해요.","ex":"多带点钱吧，万一不够就麻烦了。","py":"duōdài diǎn qián ba, wànyī búgòu jiù máfán le.","exko":"돈을 좀 넉넉히 챙겨, 혹시 모자라면 곤란하니까.","q":"___下雨，我们就改天再去。","o":["万一","虽然","尽管","不但"],"qko":"혹시 비가 오면 우리 다른 날 가자."},{"id":"z5-14","lang":"zh","lv":5,"cat":"접속 구문","pat":"除非A，不然/否则B","ko":"A하지 않는 한 B","note":"A가 유일한 조건이라는 뜻이에요. 뒤에는 그 조건이 없을 때의 결과가 와요.","ex":"除非你答应我的条件，否则我不会同意。","py":"chúfēi nǐ dāyìng wǒ de tiáojiàn, fǒuzé wǒ búhuì tóngyì.","exko":"네가 내 조건을 받아들이지 않는 한 나는 동의하지 않을 거야.","q":"___你亲自去请他，不然他不会来的。","o":["除非","既然","虽然","因为"],"qko":"네가 직접 가서 부탁하지 않는 한 그는 안 올 거야."},{"id":"z5-15","lang":"zh","lv":5,"cat":"접속 구문","pat":"哪怕A，也B","ko":"설령 A하더라도 B","note":"극단적인 경우를 가정해도 결과는 바뀌지 않는다는 뜻이에요. 即使와 비슷하고 말할 때 더 자주 써요.","ex":"哪怕只有一点希望，我们也不能放弃。","py":"nǎpà zhǐyǒu yìdiǎn xīwàng, wǒmen yě bùnéng fàngqì.","exko":"희망이 조금밖에 없더라도 포기하면 안 돼요.","q":"___再忙，他也每天给父母打电话。","o":["哪怕","因为","既然","只有"],"qko":"아무리 바빠도 그는 매일 부모님께 전화해요."},{"id":"z5-16","lang":"zh","lv":5,"cat":"특수 구문","pat":"A+为+B+所+동사","ko":"A가 B에 의해 ~되다 (글말 피동)","note":"被자 피동문과 뜻이 같고, 글말에서 써요. 为 뒤에는 행동하는 쪽이 와요.","ex":"这个道理已经为大多数人所接受。","py":"zhège dàolǐ yǐjīng wéi dàduōshù rén suǒ jiēshòu.","exko":"이 이치는 이미 대다수 사람들에게 받아들여졌어요.","q":"他的作品深受读者喜爱，为很多人___熟悉。","o":["所","被","把","给"],"qko":"그의 작품은 독자들의 사랑을 받아 많은 사람에게 잘 알려져 있어요."},{"id":"z5-17","lang":"zh","lv":5,"cat":"접속 구문","pat":"一旦A，就B","ko":"일단 A하면 B","note":"어떤 일이 생기기만 하면 바로 결과가 따른다는 뜻이에요. 주로 앞으로의 일이나 가정에 써요.","ex":"一旦养成了习惯，就很难改变。","py":"yídàn yǎngchéng le xíguàn, jiù hěn nán gǎibiàn.","exko":"일단 습관이 들면 바꾸기 어려워요.","q":"___失去这次机会，就很难再找回来。","o":["一旦","虽然","尽管","不但"],"qko":"일단 이번 기회를 놓치면 다시 찾기 어려워요."},{"id":"z5-18","lang":"zh","lv":5,"cat":"접속 구문","pat":"即使A，也B","ko":"설령 A하더라도 B","note":"가정한 상황에서도 결과가 같다는 뜻이에요. 哪怕보다 조금 격식 있는 말이에요.","ex":"即使你不说，我也知道。","py":"jíshǐ nǐ bù shuō, wǒ yě zhīdào.","exko":"네가 말하지 않아도 나는 알아.","q":"___明天下大雪，比赛也照常进行。","o":["即使","因为","既然","只要"],"qko":"내일 눈이 많이 오더라도 경기는 예정대로 진행돼요."},{"id":"z5-19","lang":"zh","lv":5,"cat":"접속 구문","pat":"无论/不管+의문 표현，都B","ko":"~이든 상관없이 다 B","note":"无论 뒤에는 什么·谁·怎么나 'A还是B' 같은 선택 표현이 와요.","ex":"无论刮风还是下雨，他都坚持跑步。","py":"wúlùn guāfēng háishì xiàyǔ, tā dōu jiānchí pǎobù.","exko":"바람이 불든 비가 오든 그는 꾸준히 달리기를 해요.","q":"___遇到什么困难，他都不放弃。","o":["无论","虽然","因为","既然"],"qko":"어떤 어려움을 만나도 그는 포기하지 않아요."},{"id":"z5-20","lang":"zh","lv":5,"cat":"접속 구문","pat":"之所以A，是因为B","ko":"A한 까닭은 B 때문이다","note":"결과를 먼저 말하고 이유를 뒤에서 밝혀요. 이유를 강조하고 싶을 때 써요.","ex":"他之所以成功，是因为他从不放弃。","py":"tā zhīsuǒyǐ chénggōng, shìyīnwèi tā cóngbú fàngqì.","exko":"그가 성공한 까닭은 절대 포기하지 않았기 때문이에요.","q":"我___选择这份工作，是因为它很有挑战性。","o":["之所以","既然","虽然","尽管"],"qko":"내가 이 일을 고른 까닭은 도전할 만하기 때문이에요."},{"id":"z5-21","lang":"zh","lv":5,"cat":"고정 표현","pat":"以A为B","ko":"A를 B로 삼다","note":"A를 기준·목표·중심으로 한다는 뜻이에요. 以……为主, 以……为目标처럼 자주 써요.","ex":"这家餐厅以海鲜为主。","py":"zhèjiā cāntīng yǐ hǎixiān wéizhǔ.","exko":"이 식당은 해산물이 주메뉴예요.","q":"这家公司以客户满意___目标。","o":["为","被","把","让"],"qko":"이 회사는 고객 만족을 목표로 삼아요."},{"id":"z5-22","lang":"zh","lv":5,"cat":"부사","pat":"(原来A，)难怪B","ko":"어쩐지 B하더라","note":"이유를 알고 나서 이상하게 여기던 일이 이해될 때 써요. 怪不得와 같은 뜻이에요.","ex":"原来他是北京人，难怪普通话说得这么好。","py":"yuánlái tā shì Běijīng rén, nánguài pǔtōnghuà shuō de zhème hǎo.","exko":"알고 보니 베이징 사람이었구나, 어쩐지 표준어를 잘하더라.","q":"原来他生病了，___今天没来上课。","o":["难怪","难道","何必","究竟"],"qko":"알고 보니 그가 아팠구나, 어쩐지 오늘 수업에 안 오더라."},{"id":"z5-23","lang":"zh","lv":5,"cat":"부사","pat":"难道A吗？","ko":"설마 A란 말인가?","note":"반문으로 강조하는 말이에요. 겉은 질문이지만 실제로는 반대 뜻을 주장해요.","ex":"难道你连这么简单的题都不会吗？","py":"nándào nǐ lián zhème jiǎndān de tí dōu búhuì ma?","exko":"설마 이렇게 쉬운 문제도 못 푸는 거야?","q":"___你不知道今天放假吗？","o":["难道","难怪","到底","不然"],"qko":"설마 오늘 쉬는 날인 걸 몰랐어?"},{"id":"z5-24","lang":"zh","lv":5,"cat":"부사","pat":"何必+동사(+呢)","ko":"구태여 ~할 필요가 있나","note":"그럴 필요가 없다는 뜻을 반문으로 나타내요. 끝에 呢를 자주 붙여요.","ex":"大家都是朋友，何必这么客气呢？","py":"dàjiā dōu shì péngyǒu, hébì zhème kèqì ne?","exko":"다 친구끼리인데 뭘 그렇게 예의를 차려요?","q":"这点小事，你___这么生气呢？","o":["何必","难怪","未必","必须"],"qko":"이런 작은 일로 뭘 그렇게 화를 내요?"},{"id":"z5-25","lang":"zh","lv":5,"cat":"부사","pat":"毕竟+A","ko":"어쨌든, 결국 (A이니까)","note":"사실이나 이유를 다시 짚어서 결론을 뒷받침해요. 상대를 이해해 주자는 말에 자주 써요.","ex":"他毕竟刚来，很多情况还不了解。","py":"tā bìjìng gāng lái, hěnduō qíngkuàng hái bù liǎojiě.","exko":"그는 어쨌든 막 왔으니까 모르는 게 많아요.","q":"别怪他了，他___还是个孩子。","o":["毕竟","难道","何必","从而"],"qko":"그를 탓하지 마, 그래도 아직 아이잖아."},{"id":"z5-26","lang":"zh","lv":5,"cat":"부사","pat":"居然/竟然+동사","ko":"뜻밖에도, 놀랍게도","note":"예상과 다른 일이 일어나 놀랐다는 느낌을 담아요. 竟然과 바꿔 쓸 수 있어요.","ex":"我没想到他居然忘了自己的生日。","py":"wǒ méixiǎngdào tā jūrán wàng le zìjǐ de shēngrì.","exko":"그가 자기 생일을 잊어버릴 줄은 몰랐어요.","q":"这么难的题，他___五分钟就做完了。","o":["居然","毕竟","何必","难怪"],"qko":"이렇게 어려운 문제를 그는 놀랍게도 5분 만에 다 풀었어요."},{"id":"z5-27","lang":"zh","lv":5,"cat":"부사","pat":"总算+동사","ko":"마침내, 겨우","note":"오래 기다리거나 애쓴 끝에 바라던 일이 이루어졌을 때 써요.","ex":"经过几次修改，论文总算完成了。","py":"jīngguò jǐcì xiūgǎi, lùnwén zǒngsuàn wánchéng le.","exko":"몇 번 고친 끝에 논문이 마침내 완성됐어요.","q":"等了一个小时，公交车___来了。","o":["总算","曾经","从来","难道"],"qko":"한 시간을 기다려서 버스가 마침내 왔어요."},{"id":"z5-28","lang":"zh","lv":5,"cat":"부사","pat":"未必+동사/형용사","ko":"반드시 ~한 것은 아니다","note":"不一定과 같은 뜻으로, 말투를 조금 부드럽게 해요.","ex":"他说的话未必都是真的。","py":"tā shuō de huà wèibì dōu shì zhēnde.","exko":"그가 한 말이 다 사실인 건 아닐 수도 있어요.","q":"贵的东西___就好。","o":["未必","必须","何必","务必"],"qko":"비싼 물건이 꼭 좋은 건 아니에요."},{"id":"z5-29","lang":"zh","lv":5,"cat":"고정 표현","pat":"动不动就+동사","ko":"걸핏하면 ~하다","note":"작은 일에도 쉽게 어떤 반응을 보인다는 뜻으로, 주로 못마땅할 때 써요.","ex":"这孩子身体不好，动不动就感冒。","py":"zhè háizi shēntǐ bùhǎo, dòngbudòng jiù gǎnmào.","exko":"이 아이는 몸이 약해서 걸핏하면 감기에 걸려요.","q":"他脾气不好，___就发火。","o":["动不动","不得不","怪不得","了不起"],"qko":"그는 성격이 나빠서 걸핏하면 화를 내요."},{"id":"z5-30","lang":"zh","lv":5,"cat":"고정 표현","pat":"对(于)A来说","ko":"A에게 있어서","note":"어떤 사람이나 입장에서 판단할 때 써요. 在A看来와 비슷해요.","ex":"对留学生来说，最难的是适应新环境。","py":"duì liúxuéshēng láishuō, zuìnán de shì shìyìng xīn huánjìng.","exko":"유학생에게 가장 어려운 건 새 환경에 적응하는 거예요.","q":"对我___，健康比钱更重要。","o":["来说","看来","以来","起来"],"qko":"나에게는 건강이 돈보다 더 중요해요."},{"id":"z5-31","lang":"zh","lv":5,"cat":"고정 표현","pat":"在A(的)+명사+下","ko":"A의 ~ 아래, ~ 덕분에","note":"도움·지도·영향 같은 조건을 나타내요. 帮助, 指导, 影响 같은 말과 자주 써요.","ex":"在大家的支持下，活动办得很成功。","py":"zài dàjiā de zhīchí xià, huódòng bànde hěn chénggōng.","exko":"모두의 지지 덕분에 행사가 성공적으로 치러졌어요.","q":"在老师的帮助___，他的成绩提高了很多。","o":["下","后","前","外"],"qko":"선생님의 도움으로 그의 성적이 많이 올랐어요."},{"id":"z5-32","lang":"zh","lv":5,"cat":"고정 표현","pat":"不得不+동사","ko":"어쩔 수 없이 ~하다","note":"원하지 않지만 상황 때문에 해야 할 때 써요.","ex":"飞机晚点了，我们不得不改变计划。","py":"fēijī wǎndiǎn le, wǒmen bùdébù gǎibiàn jìhuà.","exko":"비행기가 연착돼서 어쩔 수 없이 계획을 바꿨어요.","q":"因为下大雨，比赛___推迟。","o":["不得不","怪不得","了不起","舍不得"],"qko":"비가 많이 와서 경기는 어쩔 수 없이 미뤄졌어요."},{"id":"z6-01","lang":"zh","lv":6,"cat":"대명사·양사","pat":"本人","ko":"본인 (나, 또는 그 사람 자신)","note":"공식적인 자리에서 '나'를 가리키거나, 앞에 나온 사람 자신을 가리켜요.","ex":"这件事必须由本人亲自办理。","py":"zhèjiàn shì bìxū yóu běnrén qīnzì bànlǐ.","exko":"이 일은 반드시 본인이 직접 처리해야 해요.","q":"___对这件事不负任何责任。","o":["本人","本来","本领","根本"],"qko":"본인은 이 일에 대해 어떤 책임도 지지 않습니다."},{"id":"z6-02","lang":"zh","lv":6,"cat":"대명사·양사","pat":"명사+本身","ko":"그 자체","note":"사람이나 사물 자체를 강조해요. 주변 조건과 구별할 때 자주 써요.","ex":"工作本身并不难，难的是和人打交道。","py":"gōngzuò běnshēn bìng bùnán, nán de shì hé rén dǎjiāodao.","exko":"일 자체는 어렵지 않고, 어려운 건 사람을 상대하는 거예요.","q":"问题___并不复杂，复杂的是人际关系。","o":["本身","本人","大家","彼此"],"qko":"문제 자체는 복잡하지 않고, 복잡한 건 인간관계예요."},{"id":"z6-03","lang":"zh","lv":6,"cat":"대명사·양사","pat":"一番+동사/명사","ko":"한바탕, 한차례","note":"시간과 힘이 드는 행동에 붙는 양사예요. 수사는 주로 一를 써요.","ex":"他把房间仔细地打扫了一番。","py":"tā bǎ fángjiān zǐxì de dǎsǎo le yìfān.","exko":"그는 방을 꼼꼼히 한바탕 청소했어요.","q":"经过一___努力，他终于考上了研究生。","o":["番","顿","趟","遍"],"qko":"한바탕 노력한 끝에 그는 마침내 대학원에 합격했어요."},{"id":"z6-04","lang":"zh","lv":6,"cat":"특수 구문","pat":"이합사 사이에 수량·了·过 넣기","ko":"见面·帮忙처럼 떼어 쓰는 동사","note":"동사+목적어로 된 이합사는 목적어를 뒤에 바로 붙이지 못하고, 수량이나 了·过를 가운데 넣어요.","ex":"我们见过一次面。","py":"wǒmen jiànguo yícì miàn.","exko":"우리는 한 번 만난 적이 있어요.","q":"上次他帮了我一个大___。","o":["忙","帮","助","手"],"qko":"지난번에 그가 나를 크게 도와줬어요."},{"id":"z6-05","lang":"zh","lv":6,"cat":"고정 표현","pat":"巴不得+동사","ko":"간절히 바라다, ~하지 못해 안달이다","note":"몹시 바라는 마음을 나타내요. 말할 때 자주 써요.","ex":"孩子们巴不得马上放暑假。","py":"háizi men bābùdé mǎshàng fàngshǔjià.","exko":"아이들은 당장 여름 방학이 되기만을 간절히 바라요.","q":"听说可以提前下班，大家都___马上走。","o":["巴不得","怪不得","了不起","对不起"],"qko":"일찍 퇴근해도 된다는 말에 모두 당장 가고 싶어 안달이에요."},{"id":"z6-06","lang":"zh","lv":6,"cat":"개사","pat":"형용사+于+비교 대상","ko":"~보다 (글말 비교)","note":"高于, 低于, 大于처럼 형용사 뒤에 于를 붙여 비교를 나타내요. 比 구문의 글말 표현이에요.","ex":"今年的销售额明显高于去年。","py":"jīnnián de xiāoshòu'é míngxiǎn gāoyú qùnián.","exko":"올해 매출은 작년보다 확실히 높아요.","q":"这个城市的人口多___北京。","o":["于","比","从","对"],"qko":"이 도시 인구는 베이징보다 많아요."},{"id":"z6-07","lang":"zh","lv":6,"cat":"개사","pat":"本着+원칙·정신","ko":"~에 입각하여","note":"원칙·정신·태도 같은 추상 명사와 함께 쓰는 글말이에요.","ex":"我们应该本着实事求是的态度解决问题。","py":"wǒmen yīnggāi běnzhe shíshìqiúshì de tàidù jiějué wèntí.","exko":"우리는 사실에 근거한 태도로 문제를 해결해야 해요.","q":"双方___互相尊重的原则进行合作。","o":["本着","沿着","对着","随着"],"qko":"양측은 서로 존중하는 원칙에 따라 협력해요."},{"id":"z6-08","lang":"zh","lv":6,"cat":"특수 구문","pat":"A+把+B+동사+得/个+결과","ko":"A 때문에 B가 ~하게 되다","note":"把 뒤의 사람이 어떤 상태가 되게 만들었다는 뜻이에요. 동사 뒤에는 결과를 나타내는 말이 꼭 와요.","ex":"这几天的加班把我累坏了。","py":"zhè jǐtiān de jiābān bǎ wǒ lèihuài le.","exko":"요 며칠 야근 때문에 완전히 지쳤어요.","q":"这件事___他气得一夜没睡。","o":["把","被","对","向"],"qko":"이 일 때문에 그는 화가 나서 밤새 잠을 못 잤어요."},{"id":"z6-09","lang":"zh","lv":6,"cat":"고정 표현","pat":"总而言之 / 众所周知 / 归根到底","ko":"요컨대 / 모두 알다시피 / 결국 따져 보면","note":"문장 앞이나 중간에 끼어들어 말하는 사람의 정리나 태도를 보여 줘요. 쉼표로 떼어 써요.","ex":"众所周知，吸烟对健康有害。","py":"zhòngsuǒzhōuzhī, xīyān duì jiànkāng yǒuhài.","exko":"모두 알다시피 흡연은 건강에 해로워요.","q":"有人喜欢早起，有人喜欢熬夜，___，每个人的习惯都不一样。","o":["总而言之","与其","何况","尽管"],"qko":"일찍 일어나는 걸 좋아하는 사람도, 밤새는 걸 좋아하는 사람도 있어요. 요컨대 사람마다 습관이 달라요."},{"id":"z6-10","lang":"zh","lv":6,"cat":"접속 구문","pat":"A，以至B","ko":"A해서 (결국) B할 정도가 되다","note":"앞의 정도가 심해서 뒤의 결과까지 이르렀다는 뜻이에요.","ex":"他看书看得太入迷，以至连饭都忘了吃。","py":"tā kànshū kànde tài rùmí, yǐzhì liánfàn dōu wàng le chī.","exko":"그는 책에 너무 빠져서 밥 먹는 것도 잊을 정도였어요.","q":"他工作太投入了，___忘了时间。","o":["以至","以便","以免","何况"],"qko":"그는 일에 너무 몰두해서 시간 가는 줄도 몰랐어요."},{"id":"z6-11","lang":"zh","lv":6,"cat":"접속 구문","pat":"(由于)A，以致B","ko":"A로 인해 (나쁜 결과) B가 되다","note":"以至와 비슷하지만 以致 뒤에는 주로 좋지 않은 결과가 와요.","ex":"他平时不注意休息，以致身体越来越差。","py":"tā píngshí bú zhùyì xiūxī, yǐzhì shēntǐ yuèláiyuè chà.","exko":"그는 평소 쉬는 데 신경 쓰지 않아서 몸이 점점 나빠졌어요.","q":"由于没有认真检查，___出现了严重的错误。","o":["以致","以便","况且","何况"],"qko":"꼼꼼히 확인하지 않아서 심각한 실수가 생겼어요."},{"id":"z6-12","lang":"zh","lv":6,"cat":"고정 표현","pat":"不过/只是A而已/罢了","ko":"A일 뿐이다","note":"정도나 범위를 작게 말해서 '그 정도일 뿐'이라는 뜻을 나타내요. 앞에 不过·只是를 자주 함께 써요.","ex":"我不过开个玩笑罢了，你别当真。","py":"wǒ búguò kāigè wánxiào bàle, nǐ biédàngzhēn.","exko":"그냥 농담한 것뿐이니 진지하게 받아들이지 마.","q":"我只是随便问问___，你别紧张。","o":["而已","似的","的话","起来"],"qko":"그냥 물어본 것뿐이니 긴장하지 마."},{"id":"z6-13","lang":"zh","lv":6,"cat":"접속 구문","pat":"A固然……，但是B","ko":"A는 물론 ~하지만 B","note":"앞의 사실을 인정하면서 뒤에서 다른 점을 말해요.","ex":"钱固然重要，但是健康更重要。","py":"qián gùrán zhòngyào, dànshì jiànkāng gèng zhòngyào.","exko":"돈이 물론 중요하지만 건강이 더 중요해요.","q":"这个办法___好，但是成本太高。","o":["固然","既然","与其","宁可"],"qko":"이 방법이 물론 좋긴 하지만 비용이 너무 많이 들어요."},{"id":"z6-14","lang":"zh","lv":6,"cat":"접속 구문","pat":"时而A，时而B","ko":"때로는 A하고 때로는 B하다","note":"두 가지 상태가 번갈아 나타날 때 써요. 글말에서 자주 써요.","ex":"她的心情时而好，时而坏。","py":"tā de xīnqíng shí'ér hǎo, shí'ér huài.","exko":"그녀의 기분은 좋았다 나빴다 해요.","q":"这几天天气很怪，___晴，时而阴。","o":["时而","随时","及时","同时"],"qko":"요 며칠 날씨가 이상해서 맑았다 흐렸다 해요."},{"id":"z6-15","lang":"zh","lv":6,"cat":"접속 구문","pat":"A，进而B","ko":"A하고 나아가 B하다","note":"앞의 일을 바탕으로 한 단계 더 나아갈 때 써요.","ex":"我们要先了解客户的需求，进而提供更好的服务。","py":"wǒmen yào xiān liǎojiě kèhù de xūqiú, jìn'ér tígōng gènghǎo de fúwù.","exko":"먼저 고객의 요구를 파악하고, 나아가 더 나은 서비스를 제공해야 해요.","q":"他先在国内读完硕士，___去国外攻读博士。","o":["进而","反而","然而","况且"],"qko":"그는 먼저 국내에서 석사를 마치고, 나아가 외국에서 박사 과정을 밟았어요."},{"id":"z6-16","lang":"zh","lv":6,"cat":"접속 구문","pat":"宁愿/宁肯A，也不B","ko":"차라리 A할지언정 B하지 않다","note":"宁可와 같은 뜻이에요. 손해를 감수하는 쪽을 고르는 마음을 나타내요.","ex":"她宁愿自己辛苦一点，也不愿意麻烦别人。","py":"tā nìngyuàn zìjǐ xīnkǔ yìdiǎn, yě bú yuànyì máfán biérén.","exko":"그녀는 차라리 자기가 좀 고생할지언정 남에게 폐를 끼치려 하지 않아요.","q":"他___饿着肚子，也不吃别人剩下的东西。","o":["宁愿","假如","尽管","只要"],"qko":"그는 차라리 굶을지언정 남이 남긴 음식은 먹지 않아요."},{"id":"z6-17","lang":"zh","lv":6,"cat":"접속 구문","pat":"倘若A，(就)B","ko":"만약 A라면 B","note":"如果와 같은 뜻의 글말이에요.","ex":"倘若有什么问题，请随时联系我。","py":"tǎngruò yǒu shénme wèntí, qǐng suíshí liánxì wǒ.","exko":"만약 문제가 있으면 언제든 연락 주세요.","q":"___明天天气好，我们就去爬山。","o":["倘若","尽管","无论","固然"],"qko":"만약 내일 날씨가 좋으면 등산 가요."},{"id":"z6-18","lang":"zh","lv":6,"cat":"접속 구문","pat":"愈A愈B","ko":"A할수록 B하다","note":"越……越……와 같은 뜻의 글말이에요.","ex":"问题愈复杂，愈需要冷静思考。","py":"wèntí yù fùzá, yù xūyào lěngjìng sīkǎo.","exko":"문제가 복잡할수록 더 침착하게 생각해야 해요.","q":"雨愈下___大，我们只好回去了。","o":["愈","很","太","最"],"qko":"비가 점점 더 세게 와서 우리는 돌아갈 수밖에 없었어요."},{"id":"z6-19","lang":"zh","lv":6,"cat":"특수 구문","pat":"要+동사+就+동사+个+보어","ko":"~하려면 제대로 ~하다","note":"할 거면 끝까지 충분히 하자는 뜻이에요. 个 뒤에 痛快, 够, 明白 같은 말이 와요.","ex":"要问就问个明白。","py":"yào wèn jiù wèngè míngbái.","exko":"물어볼 거면 확실히 물어봐.","q":"难得放假，要玩就玩___痛快。","o":["个","着","过","地"],"qko":"모처럼 쉬는 날이니 놀 거면 신나게 놀자."},{"id":"z6-20","lang":"zh","lv":6,"cat":"접속 구문","pat":"A，况且B","ko":"게다가 B","note":"이유를 하나 더 보탤 때 써요. 앞의 이유를 더 단단하게 해요.","ex":"时间太晚了，况且外面还在下雨，你就别走了。","py":"shíjiān tàiwǎn le, kuàngqiě wàimiàn hái zài xiàyǔ, nǐ jiù bié zǒu le.","exko":"시간도 너무 늦었고 게다가 밖에 비도 오니까 가지 마.","q":"这件衣服太贵了，___颜色我也不喜欢。","o":["况且","然而","以致","从而"],"qko":"이 옷은 너무 비싸고, 게다가 색깔도 마음에 안 들어요."},{"id":"z6-21","lang":"zh","lv":6,"cat":"접속 구문","pat":"A尚且B，何况C","ko":"A도 B한데 하물며 C는","note":"더 쉬운 경우를 먼저 말하고, 더 어려운 경우는 말할 것도 없다는 뜻이에요.","ex":"专家尚且解决不了，何况我们呢？","py":"zhuānjiā shàngqiě jiějuébùliǎo, hékuàng wǒmen ne?","exko":"전문가도 해결 못 하는데 하물며 우리는 어떻겠어요?","q":"大人尚且搬不动，___孩子呢？","o":["何况","难怪","何必","未必"],"qko":"어른도 못 옮기는데 하물며 아이는 어떻겠어요?"},{"id":"z6-22","lang":"zh","lv":6,"cat":"접속 구문","pat":"即便/就算A，也B","ko":"설령 A하더라도 B","note":"即使와 같은 뜻이에요. 就算은 말할 때, 即便은 글말에서 더 자주 써요.","ex":"即便遇到困难，我们也要按时完成任务。","py":"jíbiàn yùdào kùnnán, wǒmen yě yào ànshí wánchéng rènwù.","exko":"어려움이 있더라도 제때 임무를 끝내야 해요.","q":"___失败了，我也不后悔。","o":["就算","既然","因为","只要"],"qko":"설령 실패하더라도 나는 후회하지 않아요."},{"id":"z6-23","lang":"zh","lv":6,"cat":"접속 구문","pat":"A，以便B","ko":"B하기 쉽도록 A하다","note":"뒤 문장이 앞 행동의 목적이에요. 바라는 일이 쉽게 이루어지게 한다는 뜻이에요.","ex":"请把资料提前发给我，以便我做好准备。","py":"qǐng bǎ zīliào tíqián fāgěi wǒ, yǐbiàn wǒ zuòhǎo zhǔnbèi.","exko":"준비할 수 있게 자료를 미리 보내 주세요.","q":"请留下电话号码，___我们及时联系您。","o":["以便","以致","以至","况且"],"qko":"바로 연락드릴 수 있게 전화번호를 남겨 주세요."},{"id":"z6-24","lang":"zh","lv":6,"cat":"접속 구문","pat":"A，以免B","ko":"B하지 않도록 A하다","note":"좋지 않은 일 B를 피하려는 목적을 나타내요.","ex":"开车时不要打电话，以免发生事故。","py":"kāichē shí búyào dǎdiànhuà, yǐmiǎn fāshēng shìgù.","exko":"사고가 나지 않도록 운전 중에는 전화하지 마세요.","q":"出门前检查一下门窗，___发生意外。","o":["以免","以便","进而","况且"],"qko":"사고가 나지 않도록 나가기 전에 문과 창문을 확인하세요."},{"id":"z6-25","lang":"zh","lv":6,"cat":"접속 구문","pat":"A，免得B","ko":"B하지 않게 A하다","note":"以免과 같은 뜻으로, 말할 때 더 자주 써요.","ex":"你到了给我打个电话，免得我担心。","py":"nǐ dào le gěi wǒ dǎgè diànhuà, miǎnde wǒ dānxīn.","exko":"내가 걱정하지 않게 도착하면 전화 줘.","q":"你早点出发，___路上堵车迟到。","o":["免得","何况","难怪","进而"],"qko":"길이 막혀 늦지 않게 일찍 출발해."},{"id":"z6-26","lang":"zh","lv":6,"cat":"부사","pat":"不至于+동사","ko":"~할 정도는 아니다","note":"어떤 정도까지 가지는 않을 거라고 판단할 때 써요.","ex":"这点小病，不至于住院吧。","py":"zhèdiǎn xiǎobìng, búzhìyú zhùyuàn ba.","exko":"이 정도 병이면 입원할 정도는 아니겠지.","q":"他虽然粗心，但还___忘了这么重要的事。","o":["不至于","不得不","对不起","来不及"],"qko":"그가 덤벙대긴 해도 이렇게 중요한 일을 잊을 정도는 아니에요."},{"id":"z6-27","lang":"zh","lv":6,"cat":"부사","pat":"未免+太/有点儿+형용사","ko":"아무래도 좀 ~하다","note":"지나치다고 부드럽게 평가할 때 써요. 뒤에 太·有点儿·过于가 자주 와요.","ex":"为这点小事吵架，未免太不值得了。","py":"wèi zhèdiǎn xiǎoshì chǎojià, wèimiǎn tài bù zhíde le.","exko":"이런 작은 일로 싸우는 건 아무래도 너무 아까워요.","q":"你这样说___太过分了。","o":["未免","何必","难道","况且"],"qko":"그렇게 말하는 건 아무래도 너무 지나쳐요."},{"id":"z6-28","lang":"zh","lv":6,"cat":"부사","pat":"难免+동사","ko":"~하기 마련이다","note":"어떤 일이 일어나는 것을 피하기 어렵다는 뜻이에요. 뒤에 会를 자주 붙여요.","ex":"刚开始工作，难免会遇到一些问题。","py":"gāng kāishǐ gōngzuò, nánmiǎn huì yùdào yìxiē wèntí.","exko":"처음 일을 시작하면 몇 가지 문제를 겪기 마련이에요.","q":"第一次做这种工作，___会出错。","o":["难免","何必","未免","毕竟"],"qko":"이런 일을 처음 하면 실수하기 마련이에요."},{"id":"z6-29","lang":"zh","lv":6,"cat":"부사","pat":"不妨+동사","ko":"~해 보는 것도 좋다","note":"상대에게 부드럽게 제안할 때 써요.","ex":"如果你有兴趣，不妨来参加我们的活动。","py":"rúguǒ nǐ yǒu xìngqù, bùfáng lái cānjiā wǒmen de huódòng.","exko":"관심 있으면 우리 행사에 와 보는 것도 좋아요.","q":"这个方法很有效，你___试一试。","o":["不妨","不免","不料","不止"],"qko":"이 방법이 효과가 좋으니 한번 해 봐도 괜찮아요."},{"id":"z6-30","lang":"zh","lv":6,"cat":"부사","pat":"简直+동사/형용사","ko":"그야말로, 정말","note":"과장하거나 강조할 때 써요. 거의 그 정도에 가깝다는 느낌이에요.","ex":"这里的风景简直像一幅画。","py":"zhèlǐ de fēngjǐng jiǎnzhí xiàng yì fú huà.","exko":"이곳 경치는 그야말로 한 폭의 그림 같아요.","q":"他画得太像了，___跟照片一模一样。","o":["简直","毕竟","何必","从而"],"qko":"그는 너무 똑같이 그려서 그야말로 사진과 똑같아요."},{"id":"z6-31","lang":"zh","lv":6,"cat":"고정 표현","pat":"就/对A而言","ko":"A에 관해 말하자면","note":"어떤 측면이나 입장에 한정해서 말할 때 써요. 글말 표현이에요.","ex":"就目前的情况而言，这个计划很难实现。","py":"jiù mùqián de qíngkuàng éryán, zhège jìhuà hěnnán shíxiàn.","exko":"현재 상황으로 보면 이 계획은 실현하기 어려워요.","q":"就质量___，这款手机是最好的。","o":["而言","而已","罢了","似的"],"qko":"품질로 말하자면 이 휴대폰이 가장 좋아요."},{"id":"z6-32","lang":"zh","lv":6,"cat":"고정 표현","pat":"非A不可","ko":"꼭 A해야만 한다","note":"반드시 그래야 한다는 강한 뜻이에요. 非 뒤에는 동사나 사람이 와요.","ex":"这件事非你亲自去不可。","py":"zhèjiàn shì fēi nǐ qīnzì qù bùkě.","exko":"이 일은 꼭 네가 직접 가야 해.","q":"这部电影太精彩了，我非看___。","o":["不可","不过","不如","不然"],"qko":"이 영화가 너무 재밌다니 꼭 봐야겠어요."},{"id":"t-01","lang":"en","lv":0,"cat":"품사 자리","pat":"관사/소유격/전치사 + 명사","ko":"명사가 들어갈 자리","note":"a·the·소유격 뒤나 전치사 뒤 빈칸에는 명사가 와요. 형용사가 앞에 있으면 그 뒤에 명사가 와요.","ex":"We appreciate your participation in the survey.","exko":"설문에 참여해 주셔서 감사합니다.","q":"The ___ of the new office will take about three months.","o":["construction","construct","constructive","constructed"],"qko":"새 사무실 공사는 약 세 달이 걸릴 거예요."},{"id":"t-02","lang":"en","lv":0,"cat":"품사 자리","pat":"형용사 + 명사 / be·remain + 형용사","ko":"형용사가 들어갈 자리","note":"명사 앞이나 be·become·remain 같은 동사 뒤에는 형용사가 와요.","ex":"The hotel offers a convenient shuttle service.","exko":"그 호텔은 편리한 셔틀 서비스를 제공해요.","q":"All employees must remain ___ during the inspection.","o":["available","availability","avail","availabilities"],"qko":"점검 동안 모든 직원은 연락이 닿는 상태로 있어야 해요."},{"id":"t-03","lang":"en","lv":0,"cat":"품사 자리","pat":"동사 + 부사 / be + 부사 + p.p.","ko":"부사가 들어갈 자리","note":"동사, 형용사, 분사를 꾸미는 자리에는 부사가 와요. be동사와 p.p. 사이 빈칸도 부사 자리예요.","ex":"The package was carefully wrapped.","exko":"소포는 조심스럽게 포장되어 있었어요.","q":"The sales figures increased ___ last quarter.","o":["significantly","significant","significance","signify"],"qko":"지난 분기에 매출이 크게 늘었어요."},{"id":"t-04","lang":"en","lv":0,"cat":"동사","pat":"단수 주어 + 단수 동사","ko":"주어와 동사의 수 일치","note":"주어 뒤에 전치사구나 관계사절이 길게 붙어도 동사는 맨 앞 명사에 맞춰요.","ex":"The list of participants is posted on the board.","exko":"참가자 명단이 게시판에 붙어 있어요.","q":"The price of the tickets ___ expected to rise next month.","o":["is","are","have","were"],"qko":"표 가격이 다음 달에 오를 것으로 예상돼요."},{"id":"t-05","lang":"en","lv":0,"cat":"동사","pat":"yesterday / last ~ / ~ ago + 과거","ko":"과거 시제","note":"yesterday, last week, ago처럼 지난 시점이 분명하면 과거 시제를 써요.","ex":"Ms. Lee joined the company two years ago.","exko":"이 씨는 2년 전에 회사에 들어왔어요.","q":"The board members ___ the proposal at last week's meeting.","o":["approved","approve","will approve","have approved"],"qko":"이사들은 지난주 회의에서 그 제안을 승인했어요."},{"id":"t-06","lang":"en","lv":0,"cat":"동사","pat":"have/has + p.p. (since, for, recently)","ko":"현재완료","note":"과거부터 지금까지 이어진 일이나 경험에 써요. since, for ~, recently, so far와 자주 함께 나와요.","ex":"Our sales have grown steadily since 2020.","exko":"우리 매출은 2020년부터 꾸준히 늘었어요.","q":"Mr. Kim ___ in the marketing department since last year.","o":["has worked","works","worked","will work"],"qko":"김 씨는 작년부터 마케팅 부서에서 일하고 있어요."},{"id":"t-07","lang":"en","lv":0,"cat":"동사","pat":"when / if / as soon as + 현재 시제","ko":"때·조건 부사절은 미래 대신 현재","note":"when, if, as soon as가 이끄는 절은 미래 일이라도 현재 시제로 써요. 주절은 will을 써요.","ex":"Please call me as soon as the shipment arrives.","exko":"물건이 도착하는 대로 전화 주세요.","q":"We will begin the meeting when everyone ___.","o":["arrives","will arrive","arrived","arriving"],"qko":"모두 도착하면 회의를 시작할게요."},{"id":"t-08","lang":"en","lv":0,"cat":"동사","pat":"be + p.p. (+ by)","ko":"수동태","note":"주어가 동작을 받는 쪽이면 be+p.p.를 써요. 빈칸 뒤에 목적어가 없으면 수동태일 가능성이 커요.","ex":"The report must be submitted by Friday.","exko":"보고서는 금요일까지 제출되어야 해요.","q":"All orders will be ___ within two business days.","o":["shipped","shipping","ship","shipment"],"qko":"모든 주문은 영업일 기준 이틀 안에 발송돼요."},{"id":"t-09","lang":"en","lv":0,"cat":"준동사","pat":"plan / decide / hope + to 동사원형","ko":"to부정사를 목적어로 쓰는 동사","note":"앞으로 할 일을 나타내는 동사 뒤에는 to부정사가 와요. plan, decide, hope, agree, intend, expect 등이 있어요.","ex":"The company plans to open a new branch in Busan.","exko":"회사는 부산에 새 지점을 열 계획이에요.","q":"The manager decided ___ the deadline by one week.","o":["to extend","extending","extend","extended"],"qko":"매니저는 마감을 일주일 늦추기로 했어요."},{"id":"t-10","lang":"en","lv":0,"cat":"준동사","pat":"consider / avoid / finish + -ing","ko":"동명사를 목적어로 쓰는 동사","note":"consider, avoid, finish, suggest, recommend, postpone 뒤에는 -ing가 와요.","ex":"We are considering moving to a larger office.","exko":"더 큰 사무실로 옮기는 것을 고려하고 있어요.","q":"Customers should avoid ___ the device near water.","o":["using","to use","use","used"],"qko":"고객은 물 근처에서 기기를 쓰지 않아야 해요."},{"id":"t-11","lang":"en","lv":0,"cat":"준동사","pat":"전치사 + -ing / look forward to -ing","ko":"전치사 뒤에는 동명사","note":"전치사 뒤에는 동사가 -ing 형태로 와요. look forward to, be committed to의 to는 전치사라서 -ing가 와요.","ex":"We look forward to working with you.","exko":"함께 일하기를 기대합니다.","q":"Thank you for ___ our annual conference.","o":["attending","attend","attended","to attend"],"qko":"연례 학회에 참석해 주셔서 감사합니다."},{"id":"t-12","lang":"en","lv":0,"cat":"준동사","pat":"-ing (능동) / p.p. (수동) + 명사","ko":"현재분사와 과거분사","note":"꾸밈을 받는 명사가 동작을 하면 -ing, 동작을 받으면 p.p.를 써요. attached file, updated schedule이 자주 나와요.","ex":"Please review the attached document.","exko":"첨부된 문서를 검토해 주세요.","q":"Please refer to the ___ schedule for the new meeting times.","o":["revised","revising","revise","revises"],"qko":"바뀐 회의 시간은 수정된 일정표를 참고해 주세요."},{"id":"t-13","lang":"en","lv":0,"cat":"준동사","pat":"-ing (감정을 주는 쪽) / p.p. (느끼는 사람)","ko":"감정을 나타내는 분사","note":"감정을 일으키는 쪽은 -ing, 감정을 느끼는 사람은 p.p.를 써요.","ex":"Employees interested in the program should contact HR.","exko":"그 프로그램에 관심 있는 직원은 인사팀에 연락하세요.","q":"The results of the survey were very ___.","o":["surprising","surprised","surprise","surprisingly"],"qko":"설문 결과는 매우 놀라웠어요."},{"id":"t-14","lang":"en","lv":0,"cat":"연결어","pat":"사람 + who / 사물 + which","ko":"관계대명사","note":"앞 명사가 사람이면 who, 사물이면 which를 써요. that은 둘 다 되지만 쉼표 뒤에는 쓰지 않아요.","ex":"The candidate who applied yesterday has excellent experience.","exko":"어제 지원한 후보는 경력이 훌륭해요.","q":"Employees ___ wish to attend the workshop must register by Monday.","o":["who","which","whose","whom"],"qko":"워크숍에 참석하려는 직원은 월요일까지 등록해야 해요."},{"id":"t-15","lang":"en","lv":0,"cat":"연결어","pat":"명사 + whose + 명사","ko":"소유격 관계대명사","note":"뒤에 관사 없는 명사가 바로 오고, 앞 명사의 소유를 나타낼 때 whose를 써요.","ex":"We need a supplier whose prices are competitive.","exko":"가격 경쟁력이 있는 공급업체가 필요해요.","q":"The award goes to the employee ___ ideas saved the most money.","o":["whose","who","which","whom"],"qko":"상은 가장 많은 비용을 아낀 아이디어를 낸 직원에게 돌아가요."},{"id":"t-16","lang":"en","lv":0,"cat":"연결어","pat":"although + 절 / despite + 명사","ko":"접속사와 전치사 구별","note":"뒤에 주어와 동사가 오면 접속사(although, because), 명사만 오면 전치사(despite, because of)를 써요.","ex":"Despite the heavy rain, the event was held as planned.","exko":"폭우에도 불구하고 행사는 예정대로 열렸어요.","q":"___ the bad weather, the flight left on time.","o":["Despite","Although","Because","Even though"],"qko":"날씨가 나빴지만 비행기는 제시간에 떠났어요."},{"id":"t-17","lang":"en","lv":0,"cat":"연결어","pat":"both A and B / either A or B / neither A nor B","ko":"짝을 이루는 접속사","note":"짝이 되는 말을 정확히 맞춰야 해요. both는 and, either는 or, neither는 nor와 함께 써요.","ex":"Applicants must speak both English and Korean.","exko":"지원자는 영어와 한국어를 모두 할 줄 알아야 해요.","q":"You can contact us either by phone ___ by e-mail.","o":["or","and","nor","but"],"qko":"전화나 이메일로 연락하실 수 있어요."},{"id":"t-18","lang":"en","lv":0,"cat":"비교·기타","pat":"-er / more ~ than, the -est / most","ko":"비교급과 최상급","note":"than이 있으면 비교급, the와 범위(in, of)가 있으면 최상급을 써요.","ex":"This model is lighter than the previous one.","exko":"이 모델은 이전 모델보다 가벼워요.","q":"This is the ___ hotel in the city.","o":["largest","larger","large","largely"],"qko":"이곳은 시내에서 가장 큰 호텔이에요."},{"id":"t-19","lang":"en","lv":0,"cat":"비교·기타","pat":"as + 원급 + as","ko":"원급 비교","note":"as와 as 사이에는 비교급이 아닌 원래 형태가 들어가요. 동사를 꾸밀 때는 부사를 써요.","ex":"Please reply as soon as possible.","exko":"가능한 한 빨리 답해 주세요.","q":"The new printer works twice as ___ as the old one.","o":["quickly","quicker","quickest","quick"],"qko":"새 프린터는 예전 것보다 두 배 빨리 작동해요."},{"id":"t-20","lang":"en","lv":0,"cat":"비교·기타","pat":"oneself / by oneself","ko":"재귀대명사","note":"주어와 목적어가 같은 사람이면 재귀대명사를 써요. by oneself나 문장 끝의 oneself는 '직접, 혼자서'라는 뜻이에요.","ex":"She completed the project by herself.","exko":"그녀는 그 프로젝트를 혼자 끝냈어요.","q":"Mr. Park prepared the presentation slides ___.","o":["himself","him","his","he"],"qko":"박 씨는 발표 자료를 직접 준비했어요."},{"id":"t-21","lang":"en","lv":0,"cat":"연결어","pat":"that / whether + 완전한 절","ko":"명사절 접속사","note":"사실을 말할 때는 that, '~인지 아닌지'를 말할 때는 whether를 써요. whether 뒤에는 or not이 자주 붙어요.","ex":"We are not sure whether the order has been shipped.","exko":"주문이 발송됐는지 잘 모르겠어요.","q":"The manager has not decided ___ the event will be postponed.","o":["whether","that","what","which"],"qko":"매니저는 행사를 미룰지 아직 정하지 않았어요."},{"id":"t-22","lang":"en","lv":0,"cat":"비교·기타","pat":"Should + 주어 + 동사원형, ~","ko":"If를 생략한 도치","note":"If you should ~에서 If를 빼면 Should가 앞으로 나와요. 안내문 끝에 자주 나와요.","ex":"Should you need any assistance, please contact the front desk.","exko":"도움이 필요하시면 프런트에 연락해 주세요.","q":"___ you have any questions, please feel free to contact us.","o":["Should","Had","Were","Would"],"qko":"궁금한 점이 있으시면 언제든 연락 주세요."},{"id":"t-23","lang":"en","lv":0,"cat":"동사","pat":"have / make / let + 목적어 + 동사원형","ko":"사역동사","note":"have, make, let 뒤에는 목적어 다음에 동사원형이 와요. 목적어가 사물이고 동작을 받으면 p.p.를 써요.","ex":"I'll have my assistant send you the file.","exko":"비서에게 파일을 보내 드리도록 할게요.","q":"The manager let the new employees ___ home early.","o":["go","to go","going","gone"],"qko":"매니저는 신입 직원들을 일찍 집에 보내 줬어요."},{"id":"t-24","lang":"en","lv":0,"cat":"비교·기타","pat":"each/every + 단수, many/few + 복수","ko":"수량 형용사","note":"each와 every 뒤에는 단수 명사와 단수 동사가 와요. information, equipment는 셀 수 없는 명사예요.","ex":"Each participant will receive a certificate.","exko":"참가자마다 수료증을 받게 돼요.","q":"Every ___ must wear a name tag.","o":["visitor","visitors","visit","visiting"],"qko":"모든 방문객은 이름표를 달아야 해요."},{"id":"t-25","lang":"en","lv":0,"cat":"연결어","pat":"by (완료 기한) / until (계속)","ko":"기한 by와 계속 until","note":"그때까지 한 번 끝내면 by, 그때까지 계속 이어지면 until을 써요.","ex":"The store will be closed until Monday.","exko":"가게는 월요일까지 문을 닫아요.","q":"Please submit your expense report ___ Friday.","o":["by","until","since","during"],"qko":"경비 보고서를 금요일까지 제출해 주세요."},{"id":"t-26","lang":"en","lv":0,"cat":"연결어","pat":"during + 기간 이름 / for + 시간 길이","ko":"during과 for","note":"during 뒤에는 the meeting처럼 특정 기간이, for 뒤에는 three hours처럼 숫자로 된 길이가 와요.","ex":"Phones must be turned off during the presentation.","exko":"발표 중에는 휴대폰을 꺼야 해요.","q":"The system will be unavailable ___ two hours tonight.","o":["for","during","while","since"],"qko":"오늘 밤 두 시간 동안 시스템을 쓸 수 없어요."},{"id":"t-27","lang":"en","lv":0,"cat":"동사","pat":"recommend / request that + 주어 + 동사원형","ko":"요구·제안의 that절","note":"recommend, suggest, request, require 뒤의 that절에는 주어가 3인칭이라도 동사원형을 써요.","ex":"The doctor recommended that he take a few days off.","exko":"의사는 그에게 며칠 쉬라고 권했어요.","q":"The manager requested that every employee ___ the training.","o":["complete","completes","completed","completing"],"qko":"매니저는 모든 직원이 교육을 이수하도록 요청했어요."},{"id":"t-28","lang":"en","lv":0,"cat":"품사 자리","pat":"명사 + 명사 (sales report)","ko":"복합명사","note":"safety regulations, customer satisfaction처럼 명사 두 개가 붙어 하나의 뜻을 만들어요. 앞 명사는 보통 단수형이에요.","ex":"Please follow the safety regulations at all times.","exko":"항상 안전 규정을 지켜 주세요.","q":"Our goal is to improve customer ___.","o":["satisfaction","satisfy","satisfied","satisfying"],"qko":"우리 목표는 고객 만족을 높이는 거예요."},{"id":"t-29","lang":"en","lv":0,"cat":"비교·기타","pat":"another / the other / the others","ko":"부정대명사","note":"여럿 중 또 하나는 another, 둘 중 나머지 하나는 the other, 나머지 전부는 the others예요.","ex":"One printer is working, but the other is broken.","exko":"프린터 하나는 되는데 나머지 하나는 고장 났어요.","q":"This room is too small. Could you show us ___ one?","o":["another","other","others","the others"],"qko":"이 방은 너무 작아요. 다른 방을 보여 주시겠어요?"},{"id":"t-30","lang":"en","lv":0,"cat":"연결어","pat":"However, / Therefore, / As a result,","ko":"접속부사","note":"문장과 문장의 관계(반대·결과·추가)를 보여 주는 말이에요. 두 절을 하나로 묶지는 못해서 마침표나 세미콜론 뒤에 와요.","ex":"Sales fell in May. However, they recovered in June.","exko":"5월에는 매출이 떨어졌어요. 하지만 6월에 회복했어요.","q":"The train was delayed. ___, we arrived late for the meeting.","o":["As a result","However","In contrast","Otherwise"],"qko":"기차가 늦었어요. 그 결과 회의에 늦게 도착했어요."}];
+const SEG = {"3098":["这所","大学","的","图书馆","很大。"],"3362":["他以","优异的","成绩","考上","了","研究生。"],"2807":["哦，","原来","你","早就","知道","了。"],"2392":["这件","事你","一定要","搞清楚","再做","决定。"],"2934":["我们","应该","如何","减少","塑料","垃圾？"],"2932":["如有","问题，","请","随时","联系","我们。"],"3189":["他是","我们班","唯一","会说","法语的","人。"],"3321":["呀，","外面","下雪","了！"],"3141":["我和","他","同一","年进","的","公司。"],"2933":["没想到","这里","的","风景","如此","美丽。"],"2179":["他们","两个","人处","得","很","好。"],"2182":["请","到","二楼","的","售票处","买票。"],"2180":["这些","问题","需要","尽快","处理。"],"3496":["政府","出台","了新","的","住房","政策。"],"2853":["这家","公司","以其","优质的","服务而","闻名。"],"2097":["他曾","在","北京","工作","过","三年。"],"3228":["公司","的","电脑系统","昨天","出了","故障。"],"3363":["会议","讨论了","预算、","人员以及","时间","安排。"],"2673":["医生","建议他","控制","饮食，","少吃甜","的。"],"3593":["学校","组织","学生","参观","了","科技馆。"],"2404":["我","根本","不","知道","这件","事。"],"2210":["这个","方案","还","存在","一些","问题。"],"2660":["他完全","靠自己","的","努力","买了","房子。"],"3238":["记者","第一","时间","赶到","了","事故现场。"],"2399":["这","只是","我","个人","的","看法。"],"2625":["睡了","一觉","以后，","他精神","多","了。"],"2025":["每天","运动","可以","帮助你","保持","健康。"],"2234":["她代表","公司","参加","了","这次","会议。"],"2117":["这个","包的","重量","超了","两","公斤。"],"2907":["会议","时间","还","没有","确定。"],"3526":["我们","的","酒店","就","在","市中心。"],"3287":["光说","不行，","我们","得","马上","行动。"],"2479":["我们","两家","公司","已经","合作了","五年。"],"2459":["哈，","我","终于","找到","钥匙","了！"],"2525":["请各位","老师","及","家长","准时","参加。"],"2032":["下周一","之前","请把","调查报告","交给","我。"],"3517":["经过","一个月的","治疗，","他的病","好多","了。"],"3389":["这座","城市","拥有","两千多年","的","历史。"],"2777":["吃药","以后，","他的症状","明显","减轻","了。"],"2956":["他","踢球","的","时候","伤了","脚。"],"3106":["他刚","在","市中心","买了","一套","房子。"],"2098":["我","曾经","在","上海","住过","两年。"],"2482":["天","已经","黑","了，","我们","回家吧。"],"3290":["在公共场所","大声","打电话","是不","礼貌的","行为。"],"2648":["这件","事我","绝对","不会","告诉","别人。"],"2812":["公司","派","他","去","上海","开会。"],"3330":["她看","了我","一眼，","什么","也没","说。"],"2973":["这座","大楼是","一位年轻","建筑师","设计","的。"],"3194":["我","对","未来","充满信心。"],"2710":["他","利用","周末","时间","学习","汉语。"],"2731":["这个","结果","令","所有人","感到","意外。"],"2017":["房租","包括","水电费。"],"2483":["这","首歌","一夜之间","就","红","了。"],"3554":["警察","很快","就抓","到","了","小偷。"],"3370":["这次","比赛","对他","来说","意义","很大。"],"2057":["他","一到","家","便","开始","做饭。"],"2704":["为了这个","项目，","大家","出了","不少","力。"],"2589":["这笔","交易","对","双方","都有","好处。"],"2031":["很多","媒体都","报道","了","这条","新闻。"],"2705":["团结","就是","力量。"],"3258":["这个","项目","预计","明年","完成。"],"3454":["这场","大雨","造成了","严重","的","交通堵塞。"],"2785":["据说某家","公司","正在","开发","这种","技术。"],"3088":["你随","我","来，","我","带你去","办公室。"],"3499":["我买","了","两支","笔和","一个","本子。"],"2300":["今天","最高","气温","三十五","度。"],"2012":["我白跑","了","一趟，","他根本","不","在家。"],"2239":["单靠一个","人是完","不成","这项","工作","的。"],"3508":["展览","时间为","五月","一日至","十月","三十一日。"],"2923":["政府","应该","为","人民","服务。"],"3032":["警方","正在","调查","这起","事件。"],"3318":["运动员","每天","要","训练","六个","小时。"],"3585":["总统在","电视","上","发表","了","讲话。"],"3083":["他似乎","不太","愿意","回答","这个","问题。"],"2641":["据","天气预报","说，","明天","有","大雨。"],"2021":["这些","老照片","是","奶奶","的","宝贝。"],"3196":["这家店的","位置很","好，","就在","地铁站","旁边。"],"2338":["这张桌子","是方","的，","那张","是圆","的。"],"3308":["这位","选手在","比赛中","表现得","非常","出色。"],"2090":["越来越","多的","年轻人","参与到","环保活动","中。"],"3236":["调查","结果显示，","大部分","人支持","这项","政策。"],"3063":["这块","土地","属于","国家。"],"2921":["气候变化","是","全人类","面临","的","问题。"],"3048":["他的","手术很","成功，","下周","就能","出院。"],"2878":["妈妈","亲了","亲","孩子","的","脸。"],"3578":["周末","是我","最","自由","的","时间。"],"3148":["他","把","球","投进","了","篮筐。"],"3033":["事实证明，","他的","判断","是","对","的。"],"2633":["这么","简单的","问题，","他居然","答错","了。"],"2670":["我们必须","按时","把货","送到","客户","手里。"],"2694":["这类","问题","以前","也","出现","过。"],"3556":["专家建议","每天","至少","喝八","杯水。"],"2132":["人们","称","他","为","“电脑","天才”。"],"2133":["请帮","我称","一下","这些","苹果有","多重。"],"2354":["我们","需要","仔细分析","失败","的","原因。"],"3253":["退休","以后，","他","开始","享受","生活。"],"3364":["入冬","以来，","这里","还没","下过","雪。"],"2333":["听到","这个","消息，","他的","反应很","平静。"],"2271":["这个","地区","冬天","经常","下雪。"],"2435":["她获得","了全国","游泳","比赛","的","冠军。"],"z5-01":["这","正是","我所","担心","的","问题。"],"z5-02":["他的","回答","令","老师","很","满意。"],"z5-03":["我","的","汉语","水平","不如","他。"],"z5-04":["这所","大学","位于","城市","的","东边。"],"z5-05":["窗户","朝南，","房间","里","很亮。"],"z5-06":["参加会议","的有经理、","主任","以及各","部门的","代表。"],"z5-07":["只要有","时间，","他便","去","图书馆","看书。"],"z5-08":["比赛","中","他","始终保持","冷静。"],"z5-09":["幸亏带了","伞，","不然","就被","淋湿","了。"],"z5-10":["吃了药，","他的病","不但","没好，","反而更重","了。"],"z5-11":["他宁可","多花点","钱，","也要买","质量好","的。"],"z5-12":["与其","坐着","等，","不如","自己去","找。"],"z5-13":["多带点钱","吧，","万一","不够就","麻烦","了。"],"z5-14":["除非你","答应我的","条件，","否则我","不会","同意。"],"z5-15":["哪怕只有","一点","希望，","我们也","不能","放弃。"],"z5-16":["这个","道理","已经为","大多数","人所","接受。"],"z5-17":["一旦","养成了","习惯，","就很","难","改变。"],"z5-18":["即使","你不","说，","我","也","知道。"],"z5-19":["无论刮风","还是","下雨，","他都","坚持","跑步。"],"z5-20":["他","之所以","成功，","是因为","他从不","放弃。"],"z5-21":["这家","餐厅","以","海鲜","为主。"],"z5-22":["原来他是","北京人，","难怪","普通话","说得这么","好。"],"z5-23":["难道你连","这么","简单","的题都","不会","吗？"],"z5-24":["大家都是","朋友，","何必","这么","客气","呢？"],"z5-25":["他毕竟","刚来，","很多","情况","还不","了解。"],"z5-26":["我","没想到","他居然","忘了","自己的","生日。"],"z5-27":["经过几次","修改，","论文","总算","完成","了。"],"z5-28":["他说","的话","未必","都","是","真的。"],"z5-29":["这孩子","身体","不好，","动不动","就","感冒。"],"z5-30":["对留学生","来说，","最难","的是","适应新","环境。"],"z5-31":["在大家","的支持","下，","活动","办得很","成功。"],"z5-32":["飞机晚点","了，","我们","不得不","改变","计划。"],"z6-01":["这件事","必须","由","本人","亲自","办理。"],"z6-02":["工作","本身并","不难，","难的","是和人","打交道。"],"z6-03":["他把","房间","仔细地","打扫","了","一番。"],"z6-04":["我们","见过","一次","面。"],"z6-05":["孩子","们","巴不得","马上","放暑假。"],"z6-06":["今年","的","销售额","明显","高于","去年。"],"z6-07":["我们","应该","本着","实事求是","的态度","解决问题。"],"z6-08":["这几天","的","加班","把我","累坏","了。"],"z6-09":["众所周知，","吸烟","对","健康","有害。"],"z6-10":["他看书","看得太","入迷，","以至连饭","都忘了","吃。"],"z6-11":["他平时","不注意","休息，","以致身体","越来越","差。"],"z6-12":["我不过","开个","玩笑","罢了，","你","别当真。"],"z6-13":["钱固然","重要，","但是","健康","更","重要。"],"z6-14":["她的","心情","时而","好，","时而","坏。"],"z6-15":["我们要先","了解客户的","需求，","进而提供","更好的","服务。"],"z6-16":["她宁愿","自己辛苦","一点，","也不愿意","麻烦","别人。"],"z6-17":["倘若有","什么","问题，","请随时","联系","我。"],"z6-18":["问题愈","复杂，","愈","需要","冷静","思考。"],"z6-19":["要","问","就","问个","明白。"],"z6-20":["时间太晚","了，况且","外面还在","下雨，","你就别走","了。"],"z6-21":["专家","尚且","解决不了，","何况","我们","呢？"],"z6-22":["即便","遇到困难，","我们也要","按时","完成","任务。"],"z6-23":["请把资料","提前发给","我，","以便我","做好","准备。"],"z6-24":["开车时","不要","打电话，","以免","发生","事故。"],"z6-25":["你到","了给我","打个","电话，","免得我","担心。"],"z6-26":["这点","小病，","不至于","住院","吧。"],"z6-27":["为这点","小事","吵架，","未免太不","值得","了。"],"z6-28":["刚开始","工作，","难免会","遇到","一些","问题。"],"z6-29":["如果你有","兴趣，","不妨来","参加","我们的","活动。"],"z6-30":["这里的","风景","简直","像","一幅","画。"],"z6-31":["就目前","的情况","而言，","这个计划","很难","实现。"],"z6-32":["这件","事非","你","亲自","去","不可。"]};
 const gById = Object.fromEntries(GRAMMAR.map(g => [g.id, g]));
 
 /* ---------- 병음 ---------- */
@@ -5818,6 +5861,7 @@ function tzg(w, o = {}) {
 const enCard = (w, o = {}) => `<div class="enframe${o.reveal ? ' reveal' : ''}" lang="en"><p class="enw">${esc(w.h)}</p>${o.pos ? `<span class="pos">${w.pos}</span>` : ''}</div>`;
 const wordFace = (w, o) => w.lang === 'en' ? enCard(w, o) : tzg(w, o);
 const SPK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6"/><path d="M18.2 6.4a8 8 0 0 1 0 11.2"/></svg>';
+const lbtns = (text, lang) => `<div class="lbtns">${spkBtn(text, lang, '다시 듣기', 'big')}<button class="link slowbtn" data-action="say" data-slow="1" data-lang="${lang}" data-say="${esc(text)}">느리게 듣기</button></div>`;
 const spkBtn = (text, lang, label, cls = '') => `<button class="spk ${cls}" data-action="say" data-lang="${lang}" data-say="${esc(text)}" aria-label="${label}" title="${label}">${SPK}</button>`;
 const ICON = {
   gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
@@ -5865,12 +5909,18 @@ function normalize(s) {
   const gs = s.gate && typeof s.gate === 'object' ? s.gate : {};
   const gate = { ids: Array.isArray(gs.ids) ? [...new Set(gs.ids.filter(id => byId[id]))].slice(-60) : [], passed: +gs.passed || 0, tries: +gs.tries || 0, best: +gs.best || 0 };
   if (![1000, 1500, 2000, 3000].includes(settings.gateScore)) settings.gateScore = 1500;
-  return { v: 2, cards, gram, game, week, gate, gifts, settings, daily: Object.assign(d.daily, s.daily || {}), streak: Object.assign(d.streak, s.streak || {}), pet, days, updated: +s.updated || 0 };
+  return { v: 2, cards, gram, game, week, gate, gifts, log: s.log && typeof s.log === 'object' && !Array.isArray(s.log) ? s.log : {}, settings, daily: Object.assign(d.daily, s.daily || {}), streak: Object.assign(d.streak, s.streak || {}), pet, days, updated: +s.updated || 0 };
 }
 let S = defaultState();
 try { const raw = localStorage.getItem(LS_KEY); if (raw) S = normalize(JSON.parse(raw)); } catch (e) {}
 function persistLocal() { try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch (e) {} }
-function save() { checkMissions(); S.updated = Date.now(); persistLocal(); queueRemote(); }
+function save() { checkMissions(); logDay(); maybeAlbum(); S.updated = Date.now(); persistLocal(); queueRemote(); }
+function logDay() {
+  if (!S.settings.track || S.daily.day !== today()) return;
+  let ri = 0, wr = 0; for (const k in S.cards) { ri += S.cards[k][RI] || 0; wr += S.cards[k][WR] || 0; }
+  const log = S.log || (S.log = {}); log[todayStr()] = { r: (S.daily.reviewed || 0) + (S.daily.gdone || 0), n: S.daily.newDone || 0, ri, wr };
+  const ks = Object.keys(log).sort(); while (ks.length > 40) delete log[ks.shift()];
+}
 function ensureDaily() { const t = today(); if (S.daily.day !== t) S.daily = { day: t, newDone: 0, reviewed: 0, bonus: 0, gnew: 0, gdone: 0, gbonus: 0 }; }
 function markStudied(t) {
   if (S.streak.last !== t) { S.streak.count = S.streak.last === t - 1 ? S.streak.count + 1 : 1; S.streak.last = t; }
@@ -5959,6 +6009,7 @@ async function sendNote(kind, text, extra) {
 }
 function onMembers(prev) {
   if (checkMissions()) save();
+  maybeAlbum(); annivCheck();
   const p = partner();
   const ids = couple.members.map(m => m.uid).filter(id => !couple.profiles[id]);
   if (ids.length && couple.user && couple.user.profiles) couple.user.profiles(ids).then(ps => { Object.assign(couple.profiles, ps || {}); renderPetInfo(); }).catch(() => {});
@@ -6172,10 +6223,39 @@ const itemUnlocked = it => it.xp != null ? petXp() >= it.xp : bestStreak() >= it
 const unlockedIds = () => ITEMS.filter(itemUnlocked).map(it => it.id);
 const itemCond = it => it.xp != null ? `함께 ${it.xp.toLocaleString()} XP` : `커플 연속 ${it.streak}일`;
 function saveLook(lk) {
-  couple.look = { head: lk.head || '', face: lk.face || '', neck: lk.neck || '', bg: lk.bg || '', best: +lk.best || 0, goal: +lk.goal || 0 };
+  couple.look = { head: lk.head || '', face: lk.face || '', neck: lk.neck || '', bg: lk.bg || '', best: +lk.best || 0, goal: +lk.goal || 0, anniv: lk.anniv || '', album: lk.album && typeof lk.album === 'object' ? lk.album : {} };
   try { localStorage.setItem('zh-hsk56-look', JSON.stringify(couple.look)); } catch (e) {}
   if (couple.db && couple.canWrite) couple.db.doc('pet/look').set(Object.assign({ by: couple.me || '', at: Date.now() }, couple.look)).catch(() => {});
   updateScreenBg(); renderCloset(); paintPet(performance.now());
+}
+const ANNIV_DEFAULT = '2026-05-22';
+const annivDate = () => /^\d{4}-\d{2}-\d{2}$/.test(couple.look.anniv || '') ? couple.look.anniv : ANNIV_DEFAULT;
+function annivInfo() {
+  const a = new Date(annivDate() + 'T00:00:00'), t = new Date(todayStr() + 'T00:00:00'), n = Math.round((t - a) / 864e5) + 1;
+  if (!(n >= 1)) return null;
+  const yrs = t.getFullYear() - a.getFullYear();
+  const special = n % 100 === 0 ? `${n}일` : (yrs > 0 && t.getMonth() === a.getMonth() && t.getDate() === a.getDate() ? `${yrs}주년` : '');
+  const next = n % 100 === 0 ? n + 100 : Math.ceil(n / 100) * 100;
+  return { n, special, next, left: next - n };
+}
+function annivHTML() {
+  const i = annivInfo(); if (!i) return '';
+  return `<p class="anniv${i.special ? ' sp' : ''}">${i.special ? `오늘은 우리 <b>${i.special}</b>! 축하해요 ♥` : `함께한 지 <b>${i.n.toLocaleString()}일</b> · ${i.next}일까지 ${i.left}일`}</p>`;
+}
+function annivCheck() {
+  const i = annivInfo(); if (!i || !i.special) return;
+  try { if (localStorage.getItem('suchan-anniv') === todayStr()) return; localStorage.setItem('suchan-anniv', todayStr()); } catch (e) {}
+  setTimeout(() => petSay(`오늘은 ${i.special}! 둘 다 축하해 ♥`, 'happy', 5000), 800);
+}
+function maybeAlbum() {
+  if (!couple.lookReady || !couple.db || !couple.canWrite || !S.settings.track) return;
+  const st = petStage(petXp()), al = Object.assign({}, couple.look.album || {}); let ch = false;
+  for (let i = 1; i <= st; i++) if (!al[i]) { al[i] = todayStr(); ch = true; }
+  if (ch) saveLook(Object.assign({}, couple.look, { album: al }));
+}
+function albumHTML() {
+  const st = petStage(petXp()), al = couple.look.album || {};
+  return `<h3 class="gb-h">수찬이 성장 앨범</h3><div class="album">${PET_STAGES.map((p, i) => `<div class="al${i <= st ? '' : ' lock'}"><img src="${scSrc('idle', i)}" alt=""><b>${i <= st ? p.name : '???'}</b><small>${i <= st ? (i === 0 ? '처음 만난 날' : String(al[i] || '').slice(5).replace('-', '.')) : p.xp.toLocaleString() + ' XP'}</small></div>`).join('')}</div>`;
 }
 function maybeBest() {
   if (!couple.lookReady || !couple.db || !couple.canWrite) return;
@@ -6261,8 +6341,10 @@ function coupleCardHTML() {
 function usCardHTML() {
   const pt = partner(), both = pt ? S.days.filter(d => (pt.days || []).includes(d)).length : 0, si = petStage(petXp());
   const names = `${esc(myName())} <span aria-hidden="true">♥</span> ${esc(pt ? memberName(pt) : (isEn() ? DEFAULT_NAME.zh : DEFAULT_NAME.en))}`;
-  return `<section class="card us" aria-label="우리 둘"><img src="img/couple.webp" alt="수연과 찬우, 그리고 수찬이"><p class="cnames">${names}</p>
+  return `<section class="card us" aria-label="우리 둘"><img src="img/couple.webp" alt="수연과 찬우, 그리고 수찬이"><p class="cnames">${names}</p>${annivHTML()}
     <div class="cstats"><span><b>${coupleStreak()}일</b><small>커플 연속</small></span><span><b>${both}일</b><small>함께 공부한 날</small></span><span><b class="sm">${PET_STAGES[si].name}</b><small>LV.${si + 1}</small></span></div>
+    <button class="btn wide" data-action="report">이번 주 리포트 보기</button>
+    ${albumHTML()}
     <h3 class="gb-h cal-title">함께 공부한 달력</h3>${calendarHTML()}</section>`;
 }
 const MISSIONS = [
@@ -6286,6 +6368,26 @@ function missionHTML() {
   return `<div class="mis" aria-label="오늘의 미션"><div class="mis-h"><b>오늘의 미션</b><span>${mc.includes('duo') ? '둘 다 완료! 커플 보너스를 받았어요' : `하나에 +5 XP${p ? ` · ${esc(memberName(p))} ${pm}/3` : ''}`}</span></div>
     <div class="mis-l">${MISSIONS.map(m => { const on = mc.includes(m.id); return `<span class="mi${on ? ' on' : ''}">${on ? svgI('check') : ''}${m.t}${on || m.of === 1 ? '' : ` ${m.n()}/${m.of}`}</span>`; }).join('')}</div></div>`;
 }
+function reportHTML() {
+  const log = S.log || {}, keys = Object.keys(log).sort(), mon = new Date(weekId() + 'T00:00:00');
+  const day = off => { const d = new Date(mon); d.setDate(d.getDate() + off); return dateStr(d); };
+  const wk = base => Array.from({ length: 7 }, (_, i) => log[day(base + i)] || null);
+  const sum = (a, f) => a.reduce((t, x) => t + (x ? +x[f] || 0 : 0), 0);
+  const acc = base => {
+    const ks = keys.filter(k => k >= day(base) && k <= day(base + 6)); if (!ks.length) return null;
+    const e = log[ks[ks.length - 1]], b = keys.filter(k => k < day(base)).pop(), s0 = b ? log[b] : { ri: 0, wr: 0 };
+    const ok = Math.max(0, e.ri - s0.ri), no = Math.max(0, e.wr - s0.wr); return ok + no > 0 ? Math.round(ok / (ok + no) * 100) : null;
+  };
+  const cur = wk(0), prev = wk(-7), cards = sum(cur, 'r'), pcards = sum(prev, 'r'), nw = sum(cur, 'n'), a = acc(0), pa = acc(-7);
+  const days = cur.filter(x => x && x.r > 0).length, top = Math.max(1, ...cur.map(x => x ? x.r : 0)), td = todayStr();
+  const diff = pcards ? (cards >= pcards ? `지난주보다 ${(cards - pcards).toLocaleString()}장 더 넘겼어요` : `지난주보다 ${(pcards - cards).toLocaleString()}장 적어요. 조금만 더 해 봐요`) : (cards ? '이번 주 기록이 쌓이고 있어요' : '이번 주 첫 카드를 넘겨 보세요');
+  const p = partner(), weak = myWeak().slice(0, 5).map(id => byId[id]);
+  return `<p class="rp-lead">${esc(myName())}의 이번 주 · ${diff}</p>
+    <div class="cstats"><span><b>${cards.toLocaleString()}장</b><small>넘긴 카드·문제</small></span><span><b>${nw}개</b><small>새 단어</small></span><span><b>${a == null ? '-' : a + '%'}</b><small>정확도${pa != null && a != null ? ` (지난주 ${pa}%)` : ''}</small></span></div>
+    <div class="rp-bars" aria-label="요일별 학습량">${cur.map((x, i) => `<div class="rb${day(i) === td ? ' td' : ''}"><i style="height:${x && x.r ? Math.max(8, x.r / top * 100) : 0}%"></i><small>${'월화수목금토일'[i]}</small><b>${x && x.r ? x.r : ''}</b></div>`).join('')}</div>
+    <p class="note-s">이번 주 ${days}일 공부했어요.${p ? ` 둘이 함께 넘긴 건 ${(weekMine() + weekTheirs(p)).toLocaleString()}장이에요 (${esc(myName())} ${weekMine().toLocaleString()} · ${esc(memberName(p))} ${weekTheirs(p).toLocaleString()}).` : ''}</p>
+    ${weak.length ? `<h3 class="gb-h">요즘 자주 틀리는 단어</h3><ul class="missed">${weak.map(w => `<li><span class="h" ${w.lang === 'en' ? 'lang="en" style="font-family:var(--font-en)"' : 'lang="zh-CN"'}>${esc(w.h)}</span><span class="m">${w.m}</span></li>`).join('')}</ul>${myWeak().length >= 4 ? '<button class="btn primary wide" data-action="qweak">자주 틀린 단어만 풀기</button>' : ''}` : '<p class="note-s">아직 자주 틀리는 단어가 없어요.</p>'}`;
+}
 function gateHTML() {
   if (!S.settings.track) return '';
   const n = gateIds().length;
@@ -6308,9 +6410,10 @@ function deckbarHTML() {
 }
 /* 아래에서 올라오는 시트: 설정, 꾸미기, 응원, 퀴즈 내기, 초대 안내 */
 let sheet = null;
-const SHEET_TITLE = { gift: '단어 선물', settings: '설정', closet: '수찬이 꾸미기', cheer: '응원 한마디', quizsend: '퀴즈 내기', invite: '함께 키울 사람 초대하기' };
+const SHEET_TITLE = { report: '주간 리포트', gift: '단어 선물', settings: '설정', closet: '수찬이 꾸미기', cheer: '응원 한마디', quizsend: '퀴즈 내기', invite: '함께 키울 사람 초대하기' };
 function sheetBody() {
   const p = partner();
+  if (sheet === 'report') return reportHTML();
   if (sheet === 'settings') return settingsHTML();
   if (sheet === 'gift') return giftSheetHTML();
   if (sheet === 'closet') return closetBodyHTML();
@@ -6523,6 +6626,7 @@ function rate(r) {
     else petSay(pick1([L().again, L().hard, L().good][r]), ['sad', 'idle', 'happy'][r], 1600);
   }
   save(); render();
+  if (S.settings.front === 'listen' && session.queue[0] && tab === 'study') speak(byId[session.queue[0]].h, byId[session.queue[0]].lang);
 }
 function renderStudy() {
   const id = session.queue[0];
@@ -6532,7 +6636,8 @@ function renderStudy() {
   const front = S.settings.front, f = session.flipped;
   const reveal = session.justFlipped; session.justFlipped = false;
   let stage;
-  if (front === 'meaning' && !f) stage = `<p class="mean-big">${w.m}</p><span class="pos">${w.pos}</span>${exSlot(id, 'front-meaning')}<p class="hint">이 뜻의 단어${en ? '' : '와 발음'}을 떠올려 보세요</p>`;
+  if (front === 'listen' && !f && hasAudio(TR().voice)) stage = lbtns(w.h, w.lang) + '<p class="hint">소리만 듣고 단어와 뜻을 떠올려 보세요</p>';
+  else if (front === 'meaning' && !f) stage = `<p class="mean-big">${w.m}</p><span class="pos">${w.pos}</span>${exSlot(id, 'front-meaning')}<p class="hint">이 뜻의 단어${en ? '' : '와 발음'}을 떠올려 보세요</p>`;
   else if (!f) stage = wordFace(w) + spkBtn(w.h, w.lang, '발음 듣기') + exSlot(id, 'front');
   else stage = en ? enCard(w, { reveal, pos: false }) : tzg(w, { color: true, py: true, reveal });
   const bottom = f ? `
@@ -6593,7 +6698,7 @@ function gamePool() {
 function startGame(gate) {
   if (!S.settings.track) return;
   if (gate && !gateLocked()) gate = false;
-  quiz = null; match = null; cancelAnimationFrame(gameRaf);
+  quiz = null; match = null; exam = null; cancelAnimationFrame(gameRaf);
   game = { gate: gate ? gateScore() : 0, gateIds: gate ? gateIds() : null, passed: false, phase: 'count', count: 3, pool: gate ? gateIds() : gamePool(), recent: [], q: null, n: 0, score: 0, combo: 0, maxCombo: 0, hearts: 3, correct: 0, wrong: 0, level: 1, missed: [], fever: 0, picked: null, mood: 'idle', tLimit: 8000, tStart: 0, pausedAt: 0, prevBest: S.game.best };
   if (couple.banner && couple.banner.kind === 'game') { S.settings.inboxSeen = Math.max(S.settings.inboxSeen || 0, +couple.banner.at || 0); couple.banner = null; save(); }
   tab = 'quiz'; render(); window.scrollTo({ top: 0 });
@@ -6679,11 +6784,89 @@ function endGame() {
   render(); window.scrollTo({ top: 0 });
 }
 function quitGame() { const g = game; if (!g) return; if (g.phase === 'over' || g.n <= 1 && g.correct + g.wrong === 0) { cancelAnimationFrame(gameRaf); const wasGate = g.gate; game = null; if (wasGate) setTab('study'); else render(); return; } endGame(); }
+let exam = null;
+const EX_LABEL = { gb: '문법 빈칸', cz: '어휘 빈칸', od: '어순 배열' };
+function chunksOf(key, text, lang) {
+  if (lang === 'zh') return SEG[key] || null;
+  const t = String(text).trim().split(/\s+/); if (t.length < 4) return null;
+  const size = Math.ceil(t.length / 6), out = [];
+  for (let i = 0; i < t.length; i += size) out.push(t.slice(i, i + size).join(' '));
+  return out;
+}
+function startExam() {
+  if (!S.settings.track) return;
+  quiz = null; game = null; match = null;
+  const lang = isEn() ? 'en' : 'zh', deck = deckWords(), sents = shuffle(sentIds());
+  const gs = shuffle(GRAMMAR.filter(g => g.lang === lang && g.q && Array.isArray(g.o) && g.o.length === 4));
+  const ods = shuffle([...sents.map(id => ({ key: id, text: sentOf(id), ko: ex.cache[id].ko, py: ex.cache[id].py || '' })), ...GRAMMAR.filter(g => g.lang === lang && g.ex).map(g => ({ key: g.id, text: g.ex, ko: g.exko, py: g.py || '' }))]
+    .map(o => Object.assign(o, { ch: chunksOf(o.key, o.text, lang) })).filter(o => o.ch && o.ch.length >= 3));
+  let gi = 0, ci = 0, oi = 0; const qs = [];
+  shuffle(['gb', 'gb', 'gb', 'gb', 'cz', 'cz', 'cz', 'od', 'od', 'od']).forEach(ty => {
+    if (ty === 'gb' && gi < gs.length) { const g = gs[gi++], order = shuffle([0, 1, 2, 3]); qs.push({ type: 'gb', g, order, ans: order.indexOf(0) }); }
+    else if (ty === 'od' && oi < ods.length) { const o = ods[oi++]; let bank = shuffle(o.ch.map((_, i) => i)); if (bank.every((v, i) => v === i)) bank.reverse(); qs.push({ type: 'od', o, bank, sep: lang === 'en' ? ' ' : '' }); }
+    else if (ci < sents.length) qs.push(Object.assign(makeQ(byId[sents[ci++]], 'cloze', deck), { type: 'cz' }));
+  });
+  if (!qs.length) return;
+  exam = { qs, i: 0, picked: null, ok: false, sel: [], score: 0 };
+  tab = 'quiz'; render(); window.scrollTo({ top: 0 });
+}
+function examDone(ok, q) {
+  exam.ok = ok; ensureDaily(); S.daily.reviewed++; addStudy(); markStudied(today());
+  if (q.type === 'cz') { const c = getCard(q.id); if (ok) c[RI]++; else { c[B] = 1; c[D] = today(); c[WR]++; } }
+  if (ok) { exam.score++; if (!addXp(q.type === 'od' ? 3 : 2)) petSay(pick1(L().good), 'happy', 1600); } else petSay(pick1(L().again), 'sad', 1600);
+  save(); render();
+}
+function examPick(i) { const e = exam; if (!e || e.picked != null || e.i >= e.qs.length) return; const q = e.qs[e.i]; if (q.type === 'od') return; e.picked = i; examDone(i === q.ans, q); }
+function examTap(i) { const e = exam, q = e && e.qs[e.i]; if (!q || q.type !== 'od' || e.picked != null || e.sel.includes(i)) return; e.sel.push(i); render(); }
+function examUntap(k) { const e = exam, q = e && e.qs[e.i]; if (!q || q.type !== 'od' || e.picked != null) return; e.sel.splice(k, 1); render(); }
+function examCheck() { const e = exam, q = e && e.qs[e.i]; if (!q || q.type !== 'od' || e.picked != null || e.sel.length !== q.o.ch.length) return; e.picked = 0; examDone(e.sel.map(i => q.o.ch[i]).join(q.sep) === q.o.ch.join(q.sep), q); }
+function examNext() { const e = exam; if (!e || e.picked == null) return; e.i++; e.picked = null; e.sel = []; if (e.i >= e.qs.length) { ensureDaily(); S.daily.qz = (S.daily.qz || 0) + 1; save(); } render(); window.scrollTo({ top: 0 }); }
+function examCardHTML() {
+  return `<section class="card mcard" aria-label="시험 유형 연습"><div><h2>시험 유형 연습</h2><p class="lead">${isEn() ? '토익 Part 5처럼 문법·어휘 빈칸을 풀고, 문장 어순도 맞춰요.' : 'HSK 독해·쓰기처럼 문법·어휘 빈칸을 풀고, 어순 배열도 해요.'} 10문제</p></div><button class="btn primary" data-action="examstart">시작</button></section>`;
+}
+function renderExam() {
+  const e = exam, en = isEn(), lg = en ? 'en' : 'zh-CN';
+  if (e.i >= e.qs.length) {
+    main.innerHTML = `<section class="card quiz" aria-label="시험 유형 결과"><div class="card-top"><span class="chip">결과</span></div>
+      <div class="prompt" style="align-items:flex-start"><div class="score">${e.score}<small> / ${e.qs.length}</small></div><p class="lead">${e.score === e.qs.length ? '모두 맞혔어요!' : e.score >= e.qs.length * .7 ? '잘했어요. 틀린 유형만 한 번 더 보면 돼요.' : '틀린 문제의 설명을 떠올리며 한 번 더 풀어 보세요.'}</p></div>
+      <div class="actions"><button class="btn primary" data-action="examstart">다시 풀기</button><button class="btn" data-action="examexit">퀴즈 화면으로</button></div></section>`;
+    return;
+  }
+  const q = e.qs[e.i], answered = e.picked != null, last = e.i === e.qs.length - 1;
+  let prompt = '', body = '', after = '';
+  const optBtn = (html, i, cls) => { let st = ''; if (answered) st = i === q.ans ? ' right' : (i === e.picked ? ' wrong' : ' dim'); return `<button class="opt ${cls}${st}" data-action="expick" data-i="${i}" ${answered ? 'disabled' : ''}><span class="k">${'ABCD'[i]}</span><span class="v" lang="${lg}">${html}</span>${answered && i === q.ans ? `<span class="okmark">${svgI('check')}</span>` : ''}</button>`; };
+  if (q.type === 'gb') {
+    const g = q.g, gap = `<span class="gap">${answered ? esc(g.o[0]) : '&nbsp;'}</span>`;
+    prompt = `<p class="cloze${en ? ' en' : ''}" lang="${lg}">${esc(g.q).replace(/_{2,}/, gap)}</p>${answered ? `<p class="hint">${esc(g.qko || '')}</p>` : '<p class="hint">빈칸에 알맞은 말을 고르세요</p>'}`;
+    body = `<div class="opts" role="group" aria-label="보기">${q.order.map((oi, i) => optBtn(esc(g.o[oi]), i, en ? 'enopt' : 'han')).join('')}</div>`;
+    after = `<p class="exp"><b>${esc(g.pat)}</b> · ${esc(g.ko)}<br>${esc(g.note || '')}</p>`;
+  } else if (q.type === 'cz') {
+    const w = byId[q.id], v = ex.cache[w.id] || {}; let html;
+    if (en) html = esc(v.s || '').replace(new RegExp(`(^|[^A-Za-zÀ-ÿ])(${escRe(esc(w.stem))}[A-Za-zÀ-ÿ'’-]*)`, 'i'), (m0, pre, word) => pre + (answered ? `<mark>${word}</mark>` : '<span class="gap">&nbsp;</span>'));
+    else { const parts = esc(v.zh || '').split(esc(w.h)); html = parts[0] + `<span class="gap">${answered ? esc(w.h) : '&nbsp;'}</span>` + parts.slice(1).join(esc(w.h)); }
+    prompt = `<p class="cloze${en ? ' en' : ''}" lang="${lg}">${html}</p>${answered ? `<p class="hint">${esc(v.ko || '')}</p>` : '<p class="hint">빈칸에 알맞은 단어를 고르세요</p>'}`;
+    body = `<div class="opts" role="group" aria-label="보기">${q.opts.map((id, i) => optBtn(esc(byId[id].h), i, en ? 'enopt' : 'han')).join('')}</div>`;
+    after = `<p class="exp"><b lang="${lg}">${esc(w.h)}</b> · ${w.m}</p>`;
+  } else {
+    const o = q.o, full = e.sel.length === o.ch.length;
+    prompt = `<p class="mean-mid">${esc(o.ko)}</p><p class="hint">조각을 순서대로 눌러 문장을 만드세요</p>`;
+    body = `<div class="od-line${answered ? (e.ok ? ' right' : ' wrong') : ''}" lang="${lg}">${e.sel.length ? e.sel.map((ci, k) => `<button class="od-chip on" data-action="oduntap" data-i="${k}" ${answered ? 'disabled' : ''}>${esc(o.ch[ci])}</button>`).join('') : '<span class="od-ph">여기에 문장이 만들어져요</span>'}</div>
+      <div class="od-bank" lang="${lg}">${q.bank.map(ci => `<button class="od-chip${e.sel.includes(ci) ? ' used' : ''}" data-action="odtap" data-i="${ci}" ${answered || e.sel.includes(ci) ? 'disabled' : ''}>${esc(o.ch[ci])}</button>`).join('')}</div>
+      ${answered ? '' : `<button class="btn primary wide" data-action="odcheck" ${full ? '' : 'disabled'}>확인</button>`}`;
+    after = `<p class="exp"><b lang="${lg}">${esc(o.text)}</b>${o.py ? `<br>${esc(o.py)}` : ''}</p>`;
+  }
+  main.innerHTML = `<section class="card quiz exam" aria-label="시험 유형 문제">
+    <div class="card-top"><span class="chip">${EX_LABEL[q.type]}</span><button class="link" data-action="examexit">그만하기</button><span class="remain">${e.i + 1} / ${e.qs.length}</span>
+      <div class="qbar"><i style="width:${(e.i + (answered ? 1 : 0)) / e.qs.length * 100}%"></i></div></div>
+    <div class="prompt">${prompt}</div>${body}
+    ${answered ? `<div class="fb" aria-live="polite"><span class="verdict ${e.ok ? 'ok' : 'no'}">${e.ok ? '정답' : '오답'}</span><button class="btn primary" data-action="examnext">${last ? '결과 보기' : '다음 문제'}</button></div>${after}` : ''}
+  </section>`;
+}
 let match = null, matchTimer = 0;
 const mSec = ms => (ms / 1000).toFixed(1);
 function startMatch() {
   if (!S.settings.track) return;
-  quiz = null; game = null;
+  quiz = null; game = null; exam = null;
   const seenM = new Set(), ids = [];
   shuffle(gamePool().slice()).forEach(id => { const w = byId[id]; if (ids.length < 6 && !seenM.has(w.m) && !seenM.has(w.h)) { seenM.add(w.m); seenM.add(w.h); ids.push(id); } });
   match = { tiles: shuffle(ids.flatMap(id => [{ id, side: 'w' }, { id, side: 'm' }])), n: ids.length, sel: null, done: [], bad: [], miss: 0, t0: performance.now(), over: false, ms: 0 };
@@ -6788,7 +6971,7 @@ function renderGameOver() {
 
 /* ---------- 퀴즈 ---------- */
 let quiz = null;
-const QLABEL = { meaning: '뜻 고르기', hanzi: '단어 고르기', tone: '성조 고르기', listen: '듣고 고르기', cloze: '빈칸 채우기', type: '직접 쓰기' };
+const QLABEL = { meaning: '뜻 고르기', hanzi: '단어 고르기', tone: '성조 고르기', listen: '듣고 고르기', cloze: '빈칸 채우기', type: '직접 쓰기', lmean: '듣고 뜻 고르기', ltype: '듣고 받아쓰기', smean: '문장 듣기', scloze: '문장 듣고 빈칸' };
 function toneVariants(w) {
   const base = w.syl.map(s => s.t), idxs = w.syl.map((s, i) => s.s === 'r' ? -1 : i).filter(i => i >= 0);
   const seen = new Set([base.join('')]), out = [];
@@ -6815,7 +6998,7 @@ function makeQ(w, type, pool) {
 }
 const myWeak = () => weakList().filter(id => byId[id].lang === (isEn() ? 'en' : 'zh'));
 function startQuiz(weak) {
-  match = null;
+  match = null; exam = null;
   let pool = deckWords(); const seenW = pool.filter(w => S.cards[w.id] && S.cards[w.id][SN] > 0);
   let picks = shuffle((seenW.length >= 10 ? seenW : pool).slice()).slice(0, 10);
   if (weak === true && myWeak().length >= 4) { picks = shuffle(myWeak().map(id => byId[id])).slice(0, 10); pool = WORDS.filter(x => x.lang === picks[0].lang); }
@@ -6831,11 +7014,47 @@ function startQuiz(weak) {
   quiz = { qs, i: 0, picked: null, score: 0, missed: [] };
   render(); autoListen();
 }
-function autoListen() { const q = quiz && quiz.qs[quiz.i]; if (q && q.type === 'listen' && quiz.picked == null) speak(byId[q.id].h, byId[q.id].lang); const ti = document.getElementById('typein'); if (ti && !ti.disabled) ti.focus({ preventScroll: true }); }
+const sentOf = id => { const v = ex.cache[id]; return v ? (v.zh || v.s || '') : ''; };
+const sentIds = () => Object.keys(ex.cache).filter(id => byId[id] && byId[id].lang === (isEn() ? 'en' : 'zh') && sentOf(id));
+const isTypeQ = q => q.type === 'type' || q.type === 'ltype';
+const sentHTML = w => { const v = ex.cache[w.id] || {}; return `<p class="cloze${w.lang === 'en' ? ' en' : ''}" lang="${w.lang === 'en' ? 'en' : 'zh-CN'}">${esc(v.zh || v.s || '')}</p>${v.py ? `<p class="hint">${esc(v.py)}</p>` : ''}<p class="hint">${esc(v.ko || '')}</p>`; };
+function autoListen() {
+  const q = quiz && quiz.qs[quiz.i];
+  if (q && quiz.picked == null) {
+    if (['listen', 'lmean', 'ltype'].includes(q.type)) speak(byId[q.id].h, byId[q.id].lang);
+    else if (q.type === 'smean' || q.type === 'scloze') speak(sentOf(q.id), byId[q.id].lang);
+  }
+  const ti = document.getElementById('typein'); if (ti && !ti.disabled) ti.focus({ preventScroll: true });
+}
+function startListen() {
+  if (!S.settings.track || !hasAudio(TR().voice)) return;
+  match = null; game = null; exam = null;
+  const deck = deckWords(), seenW = deck.filter(w => S.cards[w.id] && S.cards[w.id][SN] > 0);
+  const words = shuffle((seenW.length >= 10 ? seenW : deck).slice()), sents = shuffle(sentIds());
+  const order = shuffle(['lmean', 'ltype', 'smean', 'scloze', 'listen', 'lmean', 'ltype', 'smean', 'scloze', 'smean']);
+  let wi = 0, si = 0;
+  const qs = order.map(ty => {
+    if ((ty === 'smean' || ty === 'scloze') && sents.length >= 4 && si < sents.length) {
+      const w = byId[sents[si++]];
+      if (ty === 'smean') { const opts = shuffle([w.id, ...shuffle(sents.filter(x => x !== w.id)).slice(0, 3)]); return { type: ty, id: w.id, opts, ans: opts.indexOf(w.id) }; }
+      return Object.assign(makeQ(w, 'cloze', deck), { type: 'scloze' });
+    }
+    const w = words[wi++ % words.length];
+    if (ty === 'ltype') return { type: 'ltype', id: w.id, opts: [], ans: 0 };
+    if (ty === 'listen') return makeQ(w, 'listen', deck);
+    return Object.assign(makeQ(w, 'meaning', deck), { type: 'lmean' });
+  });
+  quiz = { qs, i: 0, picked: null, score: 0, missed: [], mode: 'listen' };
+  tab = 'quiz'; render(); window.scrollTo({ top: 0 }); autoListen();
+}
+function listenCardHTML() {
+  const ok = hasAudio(TR().voice);
+  return `<section class="card mcard lcard" aria-label="듣기 훈련"><div><h2>듣기 훈련</h2><p class="lead">${ok ? '글자를 보지 않고 소리만 듣고 풀어요. 단어 받아쓰기와 문장 듣기 10문제예요.' : `이 기기에는 ${isEn() ? '영어' : '중국어'} 음성이 없어서 듣기 훈련을 할 수 없어요.`}</p></div><button class="btn primary" data-action="lstart" ${ok ? '' : 'disabled'}>시작</button></section>`;
+}
 const normType = (w, v) => (w.lang === 'en' ? String(v).toLowerCase() : plainPy(String(v))).replace(/[^a-z]/g, '');
 function typeAnswer(val) {
   if (!quiz || quiz.picked != null || quiz.i >= quiz.qs.length) return;
-  const q = quiz.qs[quiz.i]; if (q.type !== 'type') return;
+  const q = quiz.qs[quiz.i]; if (!isTypeQ(q)) return;
   const w = byId[q.id], ok = !!val && normType(w, val) === normType(w, w.lang === 'en' ? w.h : w.p);
   quiz.typed = val; quiz.picked = ok ? 0 : -1;
   ensureDaily(); S.daily.reviewed++; addStudy(); markStudied(today());
@@ -6879,10 +7098,13 @@ const quizFrom = () => memberName(couple.members.find(m => quiz && m.uid === qui
 function renderQuiz() {
   if (game) return renderGame();
   if (match) return renderMatch();
+  if (exam) return renderExam();
   const dn = (deckDef(S.settings.deck) || {}).name;
   if (!quiz) {
     const pq = couple.pendingQuiz, pqn = pq ? memberName(couple.members.find(m => m.uid === pq.from), '짝꿍') : '';
     main.innerHTML = `${pq ? `<div class="pq" role="status">${HEART('var(--pink)')}<span>${josa(esc(pqn), '이', '가')} 낸 퀴즈 ${pq.ids.length}문제가 있어요</span><button class="btn small pink" data-action="pquiz">풀기</button></div>` : ''}
+      ${listenCardHTML()}
+      ${examCardHTML()}
       ${gameCardHTML()}
       ${matchCardHTML()}
       <section class="card quiz" aria-label="퀴즈 시작">
@@ -6907,7 +7129,7 @@ function renderQuiz() {
           <p class="lead">${missed.length ? `틀린 ${missed.length}개는 오늘 학습 목록에 다시 넣었어요.` : '모두 맞혔어요.'}${quiz.from ? ` ${josa(esc(quizFrom()), '이', '가')} 낸 퀴즈였어요. 결과를 보냈고, 맞힌 만큼 ${esc(quizFrom())}도 경험치를 받아요.${quiz.score === quiz.qs.length ? ' 다 맞혀서 보너스 5 XP!' : ''}` : ''}</p>
           ${missed.length ? `<ul class="missed">${missed.map(w => `<li><span class="h" ${w.lang === 'en' ? 'lang="en" style="font-family:var(--font-en)"' : 'lang="zh-CN"'}>${hzColored(w)}</span>${w.lang === 'en' ? '' : `<span class="p">${pyText(w, null, true)}</span>`}<span class="m">${w.m}</span></li>`).join('')}</ul>` : ''}
         </div>
-        <div class="actions">${missed.length ? '<button class="btn primary" data-action="qreview">틀린 단어 복습하기</button>' : ''}<button class="btn" data-action="qstart">다시 풀기</button></div>
+        <div class="actions">${missed.length ? '<button class="btn primary" data-action="qreview">틀린 단어 복습하기</button>' : ''}<button class="btn" data-action="${quiz.mode === 'listen' ? 'lstart' : 'qstart'}">다시 풀기</button></div>
       </section>`;
     return;
   }
@@ -6915,11 +7137,14 @@ function renderQuiz() {
   let prompt, optCls, optHTML;
   const wordOpt = id => en ? `<span lang="en">${esc(byId[id].h)}</span>` : `<span lang="zh-CN">${answered ? hzColored(byId[id]) : byId[id].h}</span>`;
   const wcls = en ? 'enopt' : 'han';
-  if (q.type === 'type') { prompt = en ? `<p class="mean-big">${w.m}</p><span class="pos">${w.pos}</span><p class="hint">영어 단어를 직접 써 보세요 · <b>${esc(w.h[0])}</b>로 시작, ${w.h.length}글자</p>` : tzg(w, { color: answered, py: answered }) + `<p class="hint">${answered ? w.m : '병음을 직접 써 보세요 (성조 없이, 예: nihao)'}</p>`; optCls = ''; optHTML = () => ''; }
+  if (q.type === 'lmean') { prompt = lbtns(w.h, w.lang) + '<p class="hint">들은 단어의 뜻을 고르세요</p>'; optCls = ''; optHTML = id => byId[id].m; }
+  else if (q.type === 'ltype') { prompt = lbtns(w.h, w.lang) + `<p class="hint">${en ? '들은 단어를 써 보세요' : '들은 단어의 병음을 써 보세요 (성조 없이)'}</p>`; optCls = ''; optHTML = () => ''; }
+  else if (q.type === 'smean') { prompt = lbtns(sentOf(w.id), w.lang) + (answered ? sentHTML(w) : '<p class="hint">들은 문장의 뜻을 고르세요</p>'); optCls = 'sent'; optHTML = id => esc(ex.cache[id].ko); }
+  else if (q.type === 'type') { prompt = en ? `<p class="mean-big">${w.m}</p><span class="pos">${w.pos}</span><p class="hint">영어 단어를 직접 써 보세요 · <b>${esc(w.h[0])}</b>로 시작, ${w.h.length}글자</p>` : tzg(w, { color: answered, py: answered }) + `<p class="hint">${answered ? w.m : '병음을 직접 써 보세요 (성조 없이, 예: nihao)'}</p>`; optCls = ''; optHTML = () => ''; }
   else if (q.type === 'meaning') { prompt = (en ? enCard(w) : tzg(w, { color: answered, py: answered })) + '<p class="hint">이 단어의 뜻은?</p>'; optCls = ''; optHTML = id => byId[id].m; }
   else if (q.type === 'hanzi') { prompt = `<p class="mean-big">${w.m}</p><span class="pos">${w.pos}</span><p class="hint">이 뜻의 단어를 고르세요</p>`; optCls = wcls; optHTML = wordOpt; }
   else if (q.type === 'listen') { prompt = spkBtn(w.h, w.lang, '다시 듣기', 'big') + '<p class="hint">들은 단어를 고르세요</p>'; optCls = wcls; optHTML = wordOpt; }
-  else if (q.type === 'cloze') {
+  else if (q.type === 'cloze' || q.type === 'scloze') {
     const v = ex.cache[w.id];
     let html = '';
     if (v && en) {
@@ -6929,7 +7154,7 @@ function renderQuiz() {
       const parts = esc(v.zh).split(esc(w.h));
       html = parts[0] + (answered ? `<span class="gap">${hzColored(w)}</span>` : '<span class="gap">&nbsp;</span>') + parts.slice(1).join(esc(w.h));
     }
-    prompt = `<p class="cloze${en ? ' en' : ''}" lang="${en ? 'en' : 'zh-CN'}">${html}</p>${v ? `<p class="hint">${esc(v.ko)}</p>` : ''}`;
+    prompt = (q.type === 'scloze' ? lbtns(sentOf(w.id), w.lang) : '') + `<p class="cloze${en ? ' en' : ''}" lang="${en ? 'en' : 'zh-CN'}">${html}</p>${v && (q.type === 'cloze' || answered) ? `<p class="hint">${esc(v.ko)}</p>` : (q.type === 'scloze' ? '<p class="hint">듣고 빈칸에 들어갈 단어를 고르세요</p>' : '')}`;
     optCls = wcls; optHTML = wordOpt;
   } else { prompt = tzg(w, { color: false }) + '<p class="hint">성조까지 맞는 병음은?</p>'; optCls = 'pyo'; optHTML = tones => pyText(w, tones, false); }
   const opts = q.opts.map((o, i) => {
@@ -6942,7 +7167,7 @@ function renderQuiz() {
       <div class="card-top"><span class="chip">${QLABEL[q.type]}</span>${quiz.from ? `<span class="chip pink">${esc(quizFrom())}의 퀴즈</span>` : ''}<span class="remain">${quiz.i + 1} / ${quiz.qs.length}</span>
         <div class="qbar"><i style="width:${(quiz.i + (answered ? 1 : 0)) / quiz.qs.length * 100}%"></i></div></div>
       <div class="prompt">${prompt}</div>
-      ${q.type === 'type' ? typeFormHTML(q, w, answered) : `<div class="opts" role="group" aria-label="보기">${opts}</div>`}
+      ${isTypeQ(q) ? typeFormHTML(q, w, answered) : `<div class="opts${q.type === 'smean' ? ' one' : ''}" role="group" aria-label="보기">${opts}</div>`}
       ${answered ? `<div class="fb" aria-live="polite"><span class="verdict ${ok ? 'ok' : 'no'}">${ok ? '정답' : '오답'}</span>
         <span class="fbw"><span class="h" ${en ? 'style="font-family:var(--font-en)"' : 'lang="zh-CN"'}>${hzColored(w)}</span>${en ? '' : `<span class="p">${pyText(w, null, true)}</span>`}<span>${w.m}</span></span>
         ${spkBtn(w.h, w.lang, '단어 듣기')}<button class="btn primary" data-action="qnext">${last ? '결과 보기' : '다음 문제'} <kbd>Enter</kbd></button></div>` : ''}
@@ -7129,7 +7354,7 @@ function settingsHTML() {
       <div class="set"><span id="lb-track">공부할 언어</span><div class="seg" role="group" aria-labelledby="lb-track">
         <button data-action="track" data-v="zh" aria-pressed="${S.settings.track === 'zh'}">중국어</button><button data-action="track" data-v="en" aria-pressed="${S.settings.track === 'en'}">영어</button></div></div>
       <div class="set"><span id="lb-front">카드 앞면</span><div class="seg" role="group" aria-labelledby="lb-front">
-        <button data-action="front" data-v="hanzi" aria-pressed="${S.settings.front === 'hanzi'}">단어</button><button data-action="front" data-v="meaning" aria-pressed="${S.settings.front === 'meaning'}">뜻</button></div></div>
+        <button data-action="front" data-v="hanzi" aria-pressed="${S.settings.front === 'hanzi'}">단어</button><button data-action="front" data-v="meaning" aria-pressed="${S.settings.front === 'meaning'}">뜻</button><button data-action="front" data-v="listen" aria-pressed="${S.settings.front === 'listen'}">소리</button></div></div>
       <div class="set"><span id="lb-npd">하루 새 단어</span><div class="seg" role="group" aria-labelledby="lb-npd">
         ${[10, 20, 30, 50].map(n => `<button data-action="npd" data-n="${n}" aria-pressed="${S.settings.newPerDay === n}">${n}</button>`).join('')}</div></div>
       <div class="set"><span id="lb-gate">관문 통과 점수</span><div class="seg" role="group" aria-labelledby="lb-gate">
@@ -7139,6 +7364,7 @@ function settingsHTML() {
         <button data-action="order" data-v="freq" aria-pressed="${S.settings.order === 'freq'}">자주 쓰는 순</button><button data-action="order" data-v="list" aria-pressed="${S.settings.order === 'list'}">목록 순</button></div></div>
       ${isEn() ? '' : `<div class="set"><span id="lb-tone">성조별 색 표시</span><button class="switch" role="switch" id="sw-tone" aria-labelledby="lb-tone" aria-checked="${S.settings.tone}" data-action="tone"></button></div>
       <div class="legend" aria-label="성조 색 안내"><span><b class="lg1">mā</b>1성</span><span><b class="lg2">má</b>2성</span><span><b class="lg3">mǎ</b>3성</span><span><b class="lg4">mà</b>4성</span><span><b class="lg5">ma</b>경성</span></div>`}
+      <div class="set"><label for="anniv">사귄 날</label><input id="anniv" class="date-in" type="date" value="${esc(annivDate())}"></div>
       <div class="set"><label for="exam">내 시험 날짜</label><input id="exam" class="date-in" type="date" value="${esc(S.settings.exam || '')}"></div>
       <div class="set"><span id="lb-goal">이번 주 둘의 목표</span><div class="seg" role="group" aria-labelledby="lb-goal">
         ${[200, 300, 500, 800].map(n => `<button data-action="goal" data-n="${n}" aria-pressed="${weekGoal() === n}">${n}</button>`).join('')}</div></div>
@@ -7180,11 +7406,11 @@ document.addEventListener('click', e => {
   if (!ex.gesture) { ex.gesture = true; if (ex.state === 'need') { ex.state = 'idle'; pumpEx(); } }
   const el = e.target.closest('[data-action]'); if (!el || el.disabled) return;
   const a = el.dataset.action;
-  if (a === 'tab') { if (game && game.phase === 'over') game = null; if (match && match.over) match = null; setTab(el.dataset.tab); }
+  if (a === 'tab') { if (game && game.phase === 'over') game = null; if (match && match.over) match = null; if (exam && exam.i >= exam.qs.length) exam = null; if (quiz && quiz.i >= quiz.qs.length) quiz = null; setTab(el.dataset.tab); }
   else if (a === 'track') setTrack(el.dataset.v);
   else if (a === 'flip') flip();
   else if (a === 'rate') rate(+el.dataset.r);
-  else if (a === 'say') speak(el.dataset.say, el.dataset.lang);
+  else if (a === 'say') speak(el.dataset.say, el.dataset.lang, el.dataset.slow ? .6 : 0);
   else if (a === 'genex') { const id = el.dataset.id; ex.failed[id] = 0; if (ex.state === 'error' || ex.state === 'need') ex.state = 'idle'; wantEx([id]); pumpEx(); updateExSlots(); }
   else if (a === 'prefetch') { const ids = [...session.queue, ...newPool().map(w => w.id)].filter(id => !ex.cache[id]).slice(0, 40); ids.forEach(id => { ex.failed[id] = 0; }); if (ex.state === 'error' || ex.state === 'need') ex.state = 'idle'; wantEx(ids); pumpEx(); updateExSlots(); }
   else if (a === 'more') { if (gateLocked()) return; S.daily.bonus = (S.daily.bonus || 0) + 10; save(); buildQueue(); render(); }
@@ -7194,7 +7420,16 @@ document.addEventListener('click', e => {
   else if (a === 'order') { S.settings.order = el.dataset.v; save(); if (!session.flipped) buildQueue(); render(); }
   else if (a === 'tone') { S.settings.tone = !S.settings.tone; save(); render(); }
   else if (a === 'qstart') startQuiz();
-  else if (a === 'qweak') startQuiz(true);
+  else if (a === 'qweak') { if (sheet) closeSheet(); startQuiz(true); tab = 'quiz'; render(); window.scrollTo({ top: 0 }); }
+  else if (a === 'report') openSheet('report');
+  else if (a === 'lstart') startListen();
+  else if (a === 'examstart') startExam();
+  else if (a === 'examexit') { exam = null; render(); }
+  else if (a === 'expick') examPick(+el.dataset.i);
+  else if (a === 'odtap') examTap(+el.dataset.i);
+  else if (a === 'oduntap') examUntap(+el.dataset.i);
+  else if (a === 'odcheck') examCheck();
+  else if (a === 'examnext') examNext();
   else if (a === 'typeskip') typeAnswer('');
   else if (a === 'matchstart') startMatch();
   else if (a === 'matchexit') { match = null; clearInterval(matchTimer); render(); }
@@ -7253,6 +7488,7 @@ document.addEventListener('submit', e => {
 });
 document.addEventListener('input', e => { if (e.target.id === 'q') { listQ = e.target.value; listLimit = 150; renderWords(); } });
 document.addEventListener('change', e => {
+  if (e.target.id === 'anniv') { if (/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) saveLook(Object.assign({}, couple.look, { anniv: e.target.value })); render(); return; }
   if (e.target.id === 'exam') { S.settings.exam = /^\d{4}-\d{2}-\d{2}$/.test(e.target.value) ? e.target.value : ''; save(); writeMember(); const db = document.querySelector('.deckbar'); render(); return; }
   if (e.target.id === 'nick') { S.settings.nick = e.target.value.trim().slice(0, 12); save(); writeMember(); renderPetInfo(); } });
 document.addEventListener('submit', e => { const f = e.target.closest && e.target.closest('form[data-form="type"]'); if (!f) return; e.preventDefault(); const v = f.querySelector('input').value.trim(); if (v) typeAnswer(v); });
@@ -7275,7 +7511,7 @@ document.addEventListener('keydown', e => {
     else if (game.phase === 'play' && game.picked == null && ['1', '2', '3', '4'].includes(k)) gamePick(+k - 1);
     else if (game.phase === 'over' && k === 'Enter' && e.target === document.body) { e.preventDefault(); startGame(); }
   } else if (tab === 'quiz') {
-    if (match) return;
+    if (match || exam) return;
     if (!quiz || quiz.i >= quiz.qs.length) { if (k === 'Enter' && e.target === document.body) { e.preventDefault(); startQuiz(); } }
     else if (quiz.picked == null && ['1', '2', '3', '4'].includes(k)) pick(+k - 1);
     else if (quiz.picked != null && (k === 'Enter' || k === ' ')) { e.preventDefault(); nextQ(); }
@@ -7302,14 +7538,14 @@ function pickVoice() {
 }
 function refreshAudio() { document.body.classList.toggle('no-audio', !hasAudio(TR().voice)); }
 try { if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.addEventListener('voiceschanged', pickVoice); } } catch (e) {}
-function speak(text, lang) {
+function speak(text, lang, rate) {
   if (!text) return;
   lang = lang === 'en' ? 'en' : 'zh';
   const v = audio.voices[lang];
   if (v) {
-    try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.voice = v; u.lang = v.lang; u.rate = lang === 'en' ? .95 : .85; speechSynthesis.speak(u); return; } catch (e) {}
+    try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.voice = v; u.lang = v.lang; u.rate = rate || (lang === 'en' ? .95 : .85); speechSynthesis.speak(u); return; } catch (e) {}
   }
-  if (audio.tts) audio.tts.speak(text, { language: lang === 'en' ? 'en' : 'zh-CN', rate: lang === 'en' ? 1 : .85 }).catch(err => { if (err && err.code === 'not_granted') { audio.tts = null; refreshAudio(); } });
+  if (audio.tts) audio.tts.speak(text, { language: lang === 'en' ? 'en' : 'zh-CN', rate: rate || (lang === 'en' ? 1 : .85) }).catch(err => { if (err && err.code === 'not_granted') { audio.tts = null; refreshAudio(); } });
 }
 
 /* ---------- 계정 저장 · 공유 저장소 연결 ---------- */
@@ -7365,10 +7601,11 @@ async function initRemote() {
     db.collection('members').onSnapshot(s => { const prev = partner(); couple.members = s.docs.map(d => d.data()).filter(m => m && m.uid); onMembers(prev); }, () => {});
     db.doc('pet/look').onSnapshot(s => {
       const d = s.exists ? s.data() : null;
-      if (d) couple.look = { head: d.head || '', face: d.face || '', neck: d.neck || '', bg: d.bg || '', best: +d.best || 0, goal: +d.goal || 0 };
+      if (d) couple.look = { head: d.head || '', face: d.face || '', neck: d.neck || '', bg: d.bg || '', best: +d.best || 0, goal: +d.goal || 0, anniv: d.anniv || '', album: d.album && typeof d.album === 'object' ? d.album : {} };
       couple.lookReady = true;
       try { localStorage.setItem('zh-hsk56-look', JSON.stringify(couple.look)); } catch (e) {}
-      updateScreenBg(); renderCloset(); paintPet(performance.now()); maybeBest(); renderPetInfo();
+      updateScreenBg(); renderCloset(); paintPet(performance.now()); maybeBest(); renderPetInfo(); maybeAlbum();
+      const sig = JSON.stringify([couple.look.anniv, couple.look.album]); if (sig !== couple.lookSig) { const first = couple.lookSig == null; couple.lookSig = sig; if (!first && tab === 'study' && !sheet) render(); }
     }, () => {});
     db.doc('inbox/' + segId(couple.me)).onSnapshot(s => { const d = s.exists ? s.data() : null; couple.inbox = d && Array.isArray(d.items) ? d.items : []; onInbox(); }, () => {});
     writeMember(true);
