@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>수찬 단어장</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1095,6 +1095,50 @@ body.gaming .banner { display: none; }
 .al b { font-size: 11.5px; font-weight: 800; line-height: 1.3; }
 .al small { font-size: 10.5px; color: var(--muted); }
 .al.lock img { filter: brightness(0) opacity(.18); }
+
+/* 확대·축소 막기 */
+html, body { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; overscroll-behavior-x: none; }
+/* 오늘의 단어 학습 (학습 탭 첫 화면) */
+.shome { gap: 12px; }
+.shome-top { display: flex; align-items: center; gap: 12px; }
+.shome-top > div { flex: 1; min-width: 0; }
+.shome-top h2 { margin: 0; font-size: 21px; font-weight: 800; }
+.shome-top .lead { margin: 2px 0 0; font-size: 13.5px; color: var(--muted); }
+.shome-n { font-size: 14px; color: var(--muted); font-weight: 700; }
+.shome-n b { font-size: 34px; color: var(--ink); font-weight: 800; margin-right: 2px; }
+.swguide { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.swguide span { text-align: center; padding: 9px 4px; border-radius: 12px; font-size: 13px; font-weight: 800; }
+.swguide .l { background: var(--pink-soft); color: #c2456b; }
+.swguide .u { background: var(--yellow-soft); color: #9a6b00; }
+.swguide .r { background: var(--mint-soft); color: var(--mint-k); }
+/* 집중 학습 화면 */
+body.focusing .hd, body.focusing .tabbar, body.focusing .banner { display: none; }
+body.focusing { overflow-x: hidden; overscroll-behavior: none; }
+body.focusing .app { padding-top: calc(10px + env(safe-area-inset-top)); padding-bottom: calc(14px + env(safe-area-inset-bottom)); }
+body.focusing #main { min-height: calc(100vh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); min-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 12px; }
+.fbar { display: flex; align-items: center; gap: 10px; }
+.fbar .remain { font-size: 13px; font-weight: 700; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.fprog { flex: 1; height: 9px; border-radius: 99px; background: var(--soft); overflow: hidden; box-shadow: inset 0 0 0 1.5px var(--line); }
+.fprog i { display: block; height: 100%; border-radius: 99px; background: var(--mint); transition: width .25s; }
+.fcard { flex: 1; position: relative; touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; will-change: transform; transition: transform .22s ease; display: flex !important; flex-direction: column; }
+.fcard.dragging { transition: none; cursor: grabbing; }
+.fcard.fly { transition: transform .2s ease-in, opacity .2s ease-in; opacity: 0; }
+.fcard .stage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.fcard .fhint { margin: 0; text-align: center; }
+.sw-tag { position: absolute; top: 18px; z-index: 3; padding: 6px 14px; border-radius: 12px; border: 3px solid; font-size: 20px; font-weight: 800; opacity: 0; pointer-events: none; background: rgba(255, 255, 255, .92); }
+.sw-tag.r { left: 16px; color: #2f9d77; border-color: #2f9d77; transform: rotate(-10deg); }
+.sw-tag.l { right: 16px; color: #d9487a; border-color: #d9487a; transform: rotate(10deg); }
+.sw-tag.u { left: 50%; top: auto; bottom: 22px; transform: translateX(-50%); color: #b07d00; border-color: #e0a91a; }
+body.focusing .rate { flex: none; }
+body.focusing .rate button { min-height: 58px; }
+#ftoast { position: fixed; left: 50%; top: calc(58px + env(safe-area-inset-top)); transform: translate(-50%, -12px); z-index: 80; display: flex; align-items: baseline; gap: 8px; max-width: calc(100vw - 32px); padding: 10px 16px; border-radius: 16px; background: #2b3a36; color: #fff; font-size: 14px; box-shadow: 0 8px 24px rgba(0, 0, 0, .18); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; }
+#ftoast.on { opacity: 1; transform: translate(-50%, 0); }
+#ftoast b { font-size: 20px; font-weight: 700; white-space: nowrap; }
+#ftoast b.en { font-family: var(--font-en); font-size: 17px; }
+#ftoast i { font-style: normal; opacity: .8; white-space: nowrap; }
+#ftoast span { overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+@media (prefers-reduced-motion: reduce) { .fcard, .fcard.fly { transition: none; } }
+body.focusing .rate { position: static !important; box-shadow: none !important; margin: 0 !important; padding: 0 !important; background: none !important; }
 </style>
 </head>
 <body class="no-audio">
@@ -6583,6 +6627,7 @@ const exCountText = () => `저장된 예문 ${WORDS.filter(w => w.lang === (isEn
 /* ---------- 오늘 학습 ---------- */
 let tab = 'study';
 let session = { queue: [], flipped: false, touched: false, justFlipped: false };
+let focus = false;
 function buildQueue() {
   ensureDaily();
   if (!S.settings.track) { session = { queue: [], flipped: false, touched: false, justFlipped: false }; return; }
@@ -6595,7 +6640,7 @@ function buildQueue() {
     if (i < due.length) q.push(due[i++]);
     if (j < fresh.length) q.push(fresh[j++]);
   }
-  session = { queue: q, flipped: false, touched: false, justFlipped: false };
+  session = { queue: q, flipped: false, touched: false, justFlipped: false, total: q.length };
   wantEx(q.slice(0, 24));
 }
 function nextBox(c, r) { const b = c[B] || 0; if (r === 0) return 1; if (r === 1) return Math.max(1, b); return b === 0 ? 2 : Math.min(5, b + 1); }
@@ -6604,7 +6649,7 @@ function flip() {
   if (!session.queue.length || session.flipped) return;
   session.flipped = true; session.justFlipped = true; render();
   const card = main.querySelector('section.card[aria-label="학습 카드"]');
-  if (card && window.innerWidth < 600 && card.getBoundingClientRect().top > 60) card.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  if (!focus && card && window.innerWidth < 600 && card.getBoundingClientRect().top > 60) card.scrollIntoView({ block: 'start', behavior: 'smooth' });
 }
 function rate(r) {
   const id = session.queue[0];
@@ -6628,9 +6673,33 @@ function rate(r) {
   save(); render();
   if (S.settings.front === 'listen' && session.queue[0] && tab === 'study') speak(byId[session.queue[0]].h, byId[session.queue[0]].lang);
 }
+function studyHomeHTML() {
+  const q = session.queue, nNew = q.filter(isNew).length;
+  return `<section class="card shome" aria-label="오늘의 단어 학습">
+    <div class="shome-top"><div><h2>오늘의 단어 학습</h2><p class="lead">복습 ${q.length - nNew}장 · 새 단어 ${nNew}장</p></div><span class="shome-n"><b>${q.length}</b>장</span></div>
+    <div class="swguide" aria-hidden="true"><span class="l">← 몰라요</span><span class="u">↑ 애매해요</span><span class="r">알아요 →</span></div>
+    <p class="note-s">단어만 보이는 화면에서 카드를 밀어 분류해요. 카드를 누르면 뜻이 보여요.</p>
+    <button class="btn primary wide cta" data-action="focusstart">${session.touched || S.daily.reviewed ? '이어서 학습하기' : '학습 시작'}</button>
+  </section>`;
+}
+function startFocus() { if (!session.queue.length) return; focus = true; session.flipped = false; tab = 'study'; render(); window.scrollTo({ top: 0 }); if (S.settings.front === 'listen') speak(byId[session.queue[0]].h, byId[session.queue[0]].lang); }
+function swipeRate(r) {
+  const id = session.queue[0]; if (!id) return;
+  const w = byId[id], seen = session.flipped;
+  session.flipped = true; rate(r);
+  if (!seen && r < 2) focusToast(w);
+}
+let toastTimer = 0;
+function focusToast(w) {
+  let el = document.getElementById('ftoast');
+  if (!el) { el = document.createElement('div'); el.id = 'ftoast'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+  el.innerHTML = `<b ${w.lang === 'en' ? 'lang="en" class="en"' : 'lang="zh-CN"'}>${esc(w.h)}</b>${w.lang === 'en' ? '' : `<i>${esc(w.p.replace(/\./g, ''))}</i>`}<span>${w.m}</span>`;
+  el.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('on'), 2800);
+}
 function renderStudy() {
   const id = session.queue[0];
   if (!id) return renderDone();
+  if (!focus) { main.innerHTML = studyHomeHTML(); return; }
   wantEx(session.queue.slice(0, 10));
   const w = byId[id], c = S.cards[id] || [0, 0, 0, 0, 0], en = w.lang === 'en';
   const front = S.settings.front, f = session.flipped;
@@ -6640,22 +6709,25 @@ function renderStudy() {
   else if (front === 'meaning' && !f) stage = `<p class="mean-big">${w.m}</p><span class="pos">${w.pos}</span>${exSlot(id, 'front-meaning')}<p class="hint">이 뜻의 단어${en ? '' : '와 발음'}을 떠올려 보세요</p>`;
   else if (!f) stage = wordFace(w) + spkBtn(w.h, w.lang, '발음 듣기') + exSlot(id, 'front');
   else stage = en ? enCard(w, { reveal, pos: false }) : tzg(w, { color: true, py: true, reveal });
+  const rateBtns = `<div class="rate" role="group" aria-label="얼마나 알았는지 고르기">
+      <button data-action="swr" data-r="0"><span class="lbl">← 몰라요</span><small>${rateHint(c, 0)}</small></button>
+      <button data-action="swr" data-r="1"><span class="lbl">↑ 애매해요</span><small>${rateHint(c, 1)}</small></button>
+      <button data-action="swr" data-r="2" class="good"><span class="lbl">알아요 →</span><small>${rateHint(c, 2)}</small></button>
+    </div>`;
   const bottom = f ? `
     <div class="back">
       <div class="mrow"><h2 class="meaning">${w.m}</h2><span class="pos">${w.pos}</span>${spkBtn(w.h, w.lang, '단어 듣기')}</div>
       ${exSlot(id, 'back')}
-    </div>
-    <div class="rate" role="group" aria-label="얼마나 알았는지 고르기">
-      <button data-action="rate" data-r="0"><span class="lbl">모름 <kbd>1</kbd></span><small>${rateHint(c, 0)}</small></button>
-      <button data-action="rate" data-r="1"><span class="lbl">애매함 <kbd>2</kbd></span><small>${rateHint(c, 1)}</small></button>
-      <button data-action="rate" data-r="2" class="good"><span class="lbl">알아요 <kbd>3</kbd></span><small>${rateHint(c, 2)}</small></button>
-    </div>` : `<button class="btn primary wide cta" data-action="flip">정답 보기 <kbd>Space</kbd></button>`;
+    </div>` : '<p class="hint fhint">카드를 누르면 뜻이 보여요 · 좌우·위로 밀어서 분류해요</p>';
   main.innerHTML = `
-    <section class="card" aria-label="학습 카드">
-      <div class="card-top"><span class="chip">${en ? '토익' : `HSK ${w.lv}급`}</span>${stChip(id)}<span class="remain">남은 카드 ${session.queue.length}</span></div>
+    <div class="fbar"><button class="iconbtn" data-action="focusexit" aria-label="학습 나가기">${svgI('x')}</button><div class="fprog"><i style="width:${Math.max(0, Math.min(100, (1 - session.queue.length / Math.max(session.total || 0, session.queue.length)) * 100)).toFixed(1)}%"></i></div><span class="remain">${session.queue.length}장 남음</span></div>
+    <section class="card fcard" aria-label="학습 카드">
+      <div class="sw-tag r" aria-hidden="true">알아요</div><div class="sw-tag l" aria-hidden="true">몰라요</div><div class="sw-tag u" aria-hidden="true">애매해요</div>
+      <div class="card-top"><span class="chip">${en ? '토익' : `HSK ${w.lv}급`}</span>${stChip(id)}</div>
       <div class="stage${f ? '' : ' tap'}"${f ? '' : ' data-action="flip"'}>${stage}</div>
       ${bottom}
-    </section>`;
+    </section>${rateBtns}`;
+  requestAnimationFrame(() => { const cd = main.querySelector('.fcard'); if (cd && document.documentElement.scrollHeight > window.innerHeight + 6) { cd.style.touchAction = 'pan-y'; cd.dataset.up = '0'; } });
 }
 function renderDone() {
   if (gateLocked()) { main.innerHTML = gateCardHTML(); return; }
@@ -7387,10 +7459,13 @@ function render() {
   document.body.classList.toggle('no-audio', !hasAudio(TR().voice));
   document.querySelectorAll('.tabbar button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
   document.body.classList.toggle('picking', !S.settings.track);
+  if (focus && (tab !== 'study' || !session.queue.length || !S.settings.track)) focus = false;
+  document.body.classList.toggle('focusing', focus);
   document.body.classList.toggle('gaming', !!(game && tab === 'quiz' && game.phase !== 'over'));
   renderHeader();
   if (!S.settings.track) { renderPick(); renderSide(); return; }
   if (tab === 'study') renderStudy(); else if (tab === 'quiz') renderQuiz(); else if (tab === 'gram') renderGram(); else renderList();
+  if (focus) { paintPet(performance.now()); renderSide(); return; }
   if (!(game && tab === 'quiz')) main.insertAdjacentHTML('afterbegin', bannerHTML() + (tab === 'study' ? coupleCardHTML() + missionHTML() + deckbarHTML() + gateHTML() : ''));
   if (tab === 'study') main.insertAdjacentHTML('beforeend', usCardHTML());
   paintPet(performance.now());
@@ -7410,10 +7485,13 @@ document.addEventListener('click', e => {
   else if (a === 'track') setTrack(el.dataset.v);
   else if (a === 'flip') flip();
   else if (a === 'rate') rate(+el.dataset.r);
+  else if (a === 'swr') swipeRate(+el.dataset.r);
+  else if (a === 'focusstart') startFocus();
+  else if (a === 'focusexit') { focus = false; session.flipped = false; render(); window.scrollTo({ top: 0 }); }
   else if (a === 'say') speak(el.dataset.say, el.dataset.lang, el.dataset.slow ? .6 : 0);
   else if (a === 'genex') { const id = el.dataset.id; ex.failed[id] = 0; if (ex.state === 'error' || ex.state === 'need') ex.state = 'idle'; wantEx([id]); pumpEx(); updateExSlots(); }
   else if (a === 'prefetch') { const ids = [...session.queue, ...newPool().map(w => w.id)].filter(id => !ex.cache[id]).slice(0, 40); ids.forEach(id => { ex.failed[id] = 0; }); if (ex.state === 'error' || ex.state === 'need') ex.state = 'idle'; wantEx(ids); pumpEx(); updateExSlots(); }
-  else if (a === 'more') { if (gateLocked()) return; S.daily.bonus = (S.daily.bonus || 0) + 10; save(); buildQueue(); render(); }
+  else if (a === 'more') { if (gateLocked()) return; S.daily.bonus = (S.daily.bonus || 0) + 10; save(); buildQueue(); startFocus(); }
   else if (a === 'deck') { S.settings.deck = el.dataset.deck; save(); buildQueue(); quiz = null; listLimit = 150; render(); }
   else if (a === 'front') { S.settings.front = el.dataset.v; session.flipped = false; save(); render(); }
   else if (a === 'npd') { S.settings.newPerDay = +el.dataset.n; save(); if (!session.flipped) buildQueue(); render(); }
@@ -7436,7 +7514,7 @@ document.addEventListener('click', e => {
   else if (a === 'mt') matchPick(+el.dataset.i);
   else if (a === 'gamestart') startGame();
   else if (a === 'gatestart') startGame(true);
-  else if (a === 'gatenext') { game = null; buildQueue(); setTab('study'); }
+  else if (a === 'gatenext') { game = null; buildQueue(); tab = 'study'; startFocus(); }
   else if (a === 'gatelater') { game = null; setTab('study'); }
   else if (a === 'gatescore') { S.settings.gateScore = +el.dataset.n; save(); renderSheetBody(); if (tab === 'study') render(); }
   else if (a === 'giftopen') { const u = unopenedGifts(); couple.giftView = null; if (u.length) openGift(u[u.length - 1]); if (couple.banner && couple.banner.kind === 'gift') { S.settings.inboxSeen = Math.max(S.settings.inboxSeen || 0, +couple.banner.at || 0); couple.banner = null; save(); renderBanner(); } giftList = null; openSheet('gift'); renderPetInfo(); }
@@ -7447,10 +7525,10 @@ document.addEventListener('click', e => {
   else if (a === 'gpk') gamePick(+el.dataset.i);
   else if (a === 'gquit') quitGame();
   else if (a === 'gameexit') { game = null; render(); }
-  else if (a === 'gamereview') { game = null; buildQueue(); setTab('study'); }
+  else if (a === 'gamereview') { game = null; buildQueue(); tab = 'study'; startFocus(); }
   else if (a === 'pick') pick(+el.dataset.i);
   else if (a === 'qnext') nextQ();
-  else if (a === 'qreview') { quiz = null; buildQueue(); setTab('study'); }
+  else if (a === 'qreview') { quiz = null; buildQueue(); tab = 'study'; startFocus(); }
   else if (a === 'expand') { expanded = expanded === el.dataset.id ? null : el.dataset.id; if (expanded) wantEx([expanded]); renderWords(); }
   else if (a === 'filter') { listF = el.dataset.f; listLimit = 150; renderList(); }
   else if (a === 'listmore') { listLimit += 150; renderWords(); }
@@ -7491,6 +7569,47 @@ document.addEventListener('change', e => {
   if (e.target.id === 'anniv') { if (/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) saveLook(Object.assign({}, couple.look, { anniv: e.target.value })); render(); return; }
   if (e.target.id === 'exam') { S.settings.exam = /^\d{4}-\d{2}-\d{2}$/.test(e.target.value) ? e.target.value : ''; save(); writeMember(); const db = document.querySelector('.deckbar'); render(); return; }
   if (e.target.id === 'nick') { S.settings.nick = e.target.value.trim().slice(0, 12); save(); writeMember(); renderPetInfo(); } });
+let drag = null, dragBlock = false;
+const SW_T = 80;
+function swipeDir(d) {
+  const up = d.card.dataset.up !== '0';
+  if (Math.abs(d.dx) >= Math.abs(d.dy) || !up) return d.dx > SW_T ? 2 : d.dx < -SW_T ? 0 : null;
+  return d.dy < -SW_T ? 1 : null;
+}
+function dragPaint(d) {
+  const up = d.card.dataset.up !== '0', dy = up ? Math.min(0, d.dy) : 0, horiz = Math.abs(d.dx) >= Math.abs(dy);
+  d.card.style.transform = `translate(${d.dx}px, ${dy}px) rotate(${(d.dx / 24).toFixed(2)}deg)`;
+  const o = v => Math.max(0, Math.min(1, v / SW_T)).toFixed(2);
+  d.card.querySelector('.sw-tag.r').style.opacity = horiz ? o(d.dx) : 0;
+  d.card.querySelector('.sw-tag.l').style.opacity = horiz ? o(-d.dx) : 0;
+  d.card.querySelector('.sw-tag.u').style.opacity = horiz ? 0 : o(-dy);
+}
+function dragEnd(cancel) {
+  const d = drag; drag = null; if (!d || !d.moved) return;
+  dragBlock = true; setTimeout(() => { dragBlock = false; }, 80);
+  const dir = cancel ? null : swipeDir(d), card = d.card;
+  card.classList.remove('dragging');
+  if (dir == null) { card.style.transform = ''; card.querySelectorAll('.sw-tag').forEach(t => { t.style.opacity = 0; }); return; }
+  card.classList.add('fly');
+  card.style.transform = dir === 2 ? 'translate(120vw, -4vh) rotate(18deg)' : dir === 0 ? 'translate(-120vw, -4vh) rotate(-18deg)' : 'translate(0, -110vh)';
+  setTimeout(() => swipeRate(dir), 170);
+}
+document.addEventListener('pointerdown', e => {
+  if (!focus || drag) return;
+  const card = e.target.closest && e.target.closest('.fcard'); if (!card || card.classList.contains('fly') || e.target.closest('button, a, input')) return;
+  if (e.pointerType === 'mouse' && e.button !== 0) return;
+  drag = { id: e.pointerId, x: e.clientX, y: e.clientY, dx: 0, dy: 0, card, moved: false };
+});
+document.addEventListener('pointermove', e => {
+  const d = drag; if (!d || e.pointerId !== d.id) return;
+  d.dx = e.clientX - d.x; d.dy = e.clientY - d.y;
+  if (!d.moved) { if (Math.hypot(d.dx, d.dy) < 8) return; d.moved = true; d.card.classList.add('dragging'); try { d.card.setPointerCapture(d.id); } catch (x) {} }
+  dragPaint(d);
+});
+document.addEventListener('pointerup', e => { if (drag && e.pointerId === drag.id) dragEnd(false); });
+document.addEventListener('pointercancel', e => { if (drag && e.pointerId === drag.id) dragEnd(true); });
+document.addEventListener('click', e => { if (dragBlock) { dragBlock = false; e.stopPropagation(); e.preventDefault(); } }, true);
+['gesturestart', 'gesturechange', 'gestureend'].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive: false }));
 document.addEventListener('submit', e => { const f = e.target.closest && e.target.closest('form[data-form="type"]'); if (!f) return; e.preventDefault(); const v = f.querySelector('input').value.trim(); if (v) typeAnswer(v); });
 document.addEventListener('keydown', e => {
   if (sheet) { if (e.key === 'Escape') closeSheet(); return; }
@@ -7498,8 +7617,11 @@ document.addEventListener('keydown', e => {
   if (e.metaKey || e.ctrlKey || e.altKey || !S.settings.track) return;
   const k = e.key;
   if (tab === 'study') {
+    if (!focus) { if (k === 'Enter' && session.queue.length && e.target === document.body) { e.preventDefault(); startFocus(); } return; }
+    if (k === 'Escape') { focus = false; render(); return; }
+    if (k === 'ArrowRight') return swipeRate(2); if (k === 'ArrowUp') { e.preventDefault(); return swipeRate(1); } if (k === 'ArrowLeft') return swipeRate(0);
     if ((k === ' ' || k === 'Enter') && !session.flipped && session.queue.length) { e.preventDefault(); flip(); }
-    else if (session.flipped && ['1', '2', '3'].includes(k)) rate(+k - 1);
+    else if (['1', '2', '3'].includes(k)) swipeRate(+k - 1);
     else if ((k === 'p' || k === 'P') && session.queue[0]) speak(byId[session.queue[0]].h, byId[session.queue[0]].lang);
   } else if (tab === 'gram') {
     if (!gsession.queue.length) return;
@@ -7629,7 +7751,7 @@ function start(data) {
   render(); startPet(); initRemote();
 }
 try { window.claude && window.claude.hot && window.claude.hot.snapshot && window.claude.hot.snapshot(() => ({ tab, session, quiz, gsession })); } catch (e) {}
-if (location.protocol === 'file:' || location.hostname === 'localhost') window.__sc = { S: () => S, session: () => session, saveLook, petSay, suchanHTML, game: () => game };
+if (location.protocol === 'file:' || location.hostname === 'localhost') window.__sc = { swipeRate, focus: () => focus, S: () => S, session: () => session, saveLook, petSay, suchanHTML, game: () => game };
 const hot = window.claude && window.claude.hot;
 if (hot && hot.ready) hot.ready(start); else start((hot && hot.data) || {});
 };
