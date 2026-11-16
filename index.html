@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
@@ -1213,6 +1213,15 @@ body.focusing .rate { position: static !important; box-shadow: none !important; 
 .rv-sent { display: grid; gap: 2px; }
 .rv mark { background: var(--mark); color: inherit; border-radius: 4px; padding: 0 3px; font-weight: 700; }
 .exam > .gloss, .card.quiz .prompt > .gloss { width: 100%; text-align: left; }
+
+/* 시트(설정 등): 위아래로만 움직이고 좌우·뒤 화면은 고정 */
+:root { color-scheme: light; }
+.sheet { touch-action: none; overscroll-behavior: contain; }
+.sheet-bg { touch-action: none; }
+.sheet-card { overflow-x: hidden; overflow-y: auto; touch-action: pan-y; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; max-height: 86vh; max-height: 86dvh; }
+.sheet-body, .sheet-body > * { min-width: 0; max-width: 100%; }
+.sheet-body .set { flex-wrap: wrap; row-gap: 6px; }
+.sheet-body .seg { max-width: 100%; flex-wrap: wrap; }
 </style>
 </head>
 <body class="no-audio">
@@ -6562,8 +6571,14 @@ function renderSheetBody() {
   if (!b || (a && a.tagName === 'INPUT' && b.contains(a))) return;
   b.innerHTML = sheetBody();
 }
-function openSheet(k) { sheet = k; renderSheet(); const f = (k === 'cheer' && document.querySelector('#cheerin')) || document.querySelector('#sheet .sheet-head .iconbtn'); if (f) f.focus({ preventScroll: true }); }
-function closeSheet() { sheet = null; renderSheet(); }
+let lockY = null;
+function lockScroll(on) {   // 아이폰에서는 뒤 화면이 같이 움직이므로, 시트가 열려 있는 동안 뒤 화면을 그 자리에 고정
+  const b = document.body;
+  if (on && lockY == null) { lockY = window.scrollY; b.style.position = 'fixed'; b.style.top = -lockY + 'px'; b.style.left = '0'; b.style.right = '0'; b.style.width = '100%'; }
+  else if (!on && lockY != null) { const y = lockY; lockY = null; b.style.position = ''; b.style.top = ''; b.style.left = ''; b.style.right = ''; b.style.width = ''; window.scrollTo(0, y); }
+}
+function openSheet(k) { sheet = k; lockScroll(true); renderSheet(); const f = (k === 'cheer' && document.querySelector('#cheerin')) || document.querySelector('#sheet .sheet-head .iconbtn'); if (f) f.focus({ preventScroll: true }); }
+function closeSheet() { sheet = null; renderSheet(); lockScroll(false); }
 function renderPetInfo() {
   renderHeader();
   const cc = document.getElementById('cc'); if (cc) cc.outerHTML = coupleCardHTML();
